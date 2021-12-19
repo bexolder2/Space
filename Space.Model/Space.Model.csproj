@@ -60,6 +60,11 @@
     <Compile Include="Modules\Storage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Space.Helpers\Space.Helpers.csproj">
+      <Project>{734f7727-6684-427d-b3dd-969d13315241}</Project>
+      <Name>Space.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

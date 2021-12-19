@@ -2,10 +2,10 @@
 
 namespace Space.Model.Modules
 {
-    public class Hull : BindableBase.BindableBase
+    public abstract class BaseModel : BindableBase.BindableBase
     {
         private int price;
-        private int xp;
+        private int hp;
         private Level level;
 
         #region properties
@@ -15,10 +15,10 @@ namespace Space.Model.Modules
             set => Set(ref price, value);
         }
 
-        public int XP
+        public int HP
         {
-            get => xp;
-            set => Set(ref xp, value);
+            get => hp;
+            set => Set(ref hp, value);
         }
 
         public Level Level
