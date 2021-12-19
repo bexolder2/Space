@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Space.ViewModel;
+using System.Windows;
 
 namespace Space.View
 {
@@ -7,6 +8,7 @@ namespace Space.View
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
     }
 }

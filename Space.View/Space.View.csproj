@@ -58,6 +58,7 @@
     <Compile Include="FightWindow.xaml.cs">
       <DependentUpon>FightWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Selector\TemplateSelector.cs" />
     <Compile Include="UpgradeWindow.xaml.cs">
       <DependentUpon>UpgradeWindow.xaml</DependentUpon>
     </Compile>
@@ -133,10 +134,29 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\planet1.png" />
+    <Resource Include="Images\planet2.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\bg1.jpeg" />
     <Resource Include="Images\bg2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\station.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Space.Model\Space.Model.csproj">
+      <Project>{318A2B53-FB5D-4DA6-8334-7B922131CF6D}</Project>
+      <Name>Space.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Space.ViewModel\Space.ViewModel.csproj">
+      <Project>{CCE5375D-DD21-42A3-82A4-9A7F077D459D}</Project>
+      <Name>Space.ViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\asteroid.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

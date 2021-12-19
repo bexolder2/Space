@@ -5,8 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space.View"
         xmlns:customControls="clr-namespace:Space.View.CustomControls"
+        xmlns:selector="clr-namespace:Space.View.Selector"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate x:Key="EmptyCell">
+            <Button Height="80"
+                    Width="80"
+                    Background="Transparent">
+            </Button>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="Planet1Cell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/planet1.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Planet2Cell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/planet2.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="StationCell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/station.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AsteroidCell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/asteroid.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <selector:TemplateSelector x:Key="TemplateSelector"/>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -31,7 +80,9 @@
                                             HorizontalAlignment="Right"/>
         </Grid>
 
-        <ListView Grid.Row="1">
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding Cells}"
+                  ItemTemplateSelector="{StaticResource TemplateSelector}">
             <ListView.Background>
                 <ImageBrush ImageSource="Images/bg1.jpeg"/>
             </ListView.Background>
