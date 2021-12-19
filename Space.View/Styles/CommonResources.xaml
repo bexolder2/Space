@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Space.View.Styles"
+                    xmlns:clr="clr-namespace:System;assembly=mscorlib">
+    <clr:String x:Key="Cryptocurrency">&#xEC5C;</clr:String>
+    <clr:String x:Key="Energy">&#xF5FB;</clr:String>
+    <clr:String x:Key="Ore">&#xF159;</clr:String>
+    <clr:String x:Key="Distance">&#xEF90;</clr:String>
+    <clr:String x:Key="HealthPoint">&#xEA18;</clr:String>
+    <clr:String x:Key="Upgrade">&#xE950;</clr:String>
+    <clr:String x:Key="Capitulation">&#xEB4B;</clr:String>
+</ResourceDictionary>

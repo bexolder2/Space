@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.Model", "Space.Model\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.ViewModel", "Space.ViewModel\Space.ViewModel.csproj", "{CCE5375D-DD21-42A3-82A4-9A7F077D459D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.Helpers", "Space.Helpers\Space.Helpers.csproj", "{734F7727-6684-427D-B3DD-969D13315241}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CCE5375D-DD21-42A3-82A4-9A7F077D459D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCE5375D-DD21-42A3-82A4-9A7F077D459D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCE5375D-DD21-42A3-82A4-9A7F077D459D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{734F7727-6684-427D-B3DD-969D13315241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734F7727-6684-427D-B3DD-969D13315241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734F7727-6684-427D-B3DD-969D13315241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734F7727-6684-427D-B3DD-969D13315241}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

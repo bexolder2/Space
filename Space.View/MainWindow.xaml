@@ -4,9 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space.View"
+        xmlns:customControls="clr-namespace:Space.View.CustomControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <customControls:ResourcePanel Grid.Column="0"
+                                          VerticalAlignment="Center" />
+            <customControls:SpaceshipPropertiesPanel Grid.Column="1"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+            <customControls:TopButtonsPanel Grid.Column="2"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"/>
+        </Grid>
+
+        <ListView Grid.Row="1">
+            <ListView.Background>
+                <ImageBrush ImageSource="Images/bg1.jpeg"/>
+            </ListView.Background>
+            
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="40"
+                                 ScrollViewer.CanContentScroll="True"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                 ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
     </Grid>
 </Window>
