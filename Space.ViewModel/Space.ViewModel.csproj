@@ -39,12 +39,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Space.Helpers\Space.Helpers.csproj">
+      <Project>{734F7727-6684-427D-B3DD-969D13315241}</Project>
+      <Name>Space.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Space.Model\Space.Model.csproj">
       <Project>{318A2B53-FB5D-4DA6-8334-7B922131CF6D}</Project>
       <Name>Space.Model</Name>

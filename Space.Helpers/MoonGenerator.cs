@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace Space.Helpers
 {
-    public class OreGenerator : IGenerator<int>
+    public class MoonGenerator : IGenerator<int>
     {
-        private const int minValue = 100;
-        private const int maxValue = 1001;
+        private const int minValue = 0;
+        private const int maxValue = 4;
 
         public int Generate(List<int> args = null)
         {

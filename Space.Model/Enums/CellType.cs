@@ -2,12 +2,12 @@
 {
     public enum CellType
     {
-        None,
-        User,
-        UserAsteroid,
-        UserStation,
-        UserPlanet1,
-        UserPlanet2,
+        Empty,
+        Player,
+        PlayerAndAsteroid,
+        PlayerAndStation,
+        PlayerAndPlanet1,
+        PlayerAndPlanet2,
         Planet1,
         Planet2,
         Station,

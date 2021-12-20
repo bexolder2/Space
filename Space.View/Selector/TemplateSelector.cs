@@ -17,7 +17,7 @@ namespace Space.View.Selector
             {
                 switch (param)
                 {
-                    case CellType.None:
+                    case CellType.Empty:
                         result = element.FindResource("EmptyCell") as DataTemplate;
                         break;
                     case CellType.Station:
@@ -32,11 +32,11 @@ namespace Space.View.Selector
                     case CellType.Asteroid:
                         result = element.FindResource("AsteroidCell") as DataTemplate;
                         break;
-                    case CellType.User:
+                    case CellType.Player:
                         break;
-                    case CellType.UserAsteroid:
+                    case CellType.PlayerAndAsteroid:
                         break;
-                    case CellType.UserStation:
+                    case CellType.PlayerAndStation:
                         break;
                 }
             }     

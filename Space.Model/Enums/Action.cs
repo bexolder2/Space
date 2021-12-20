@@ -5,6 +5,7 @@
         Move,
         Buy,
         Collect,
-        Fight
+        Fight,
+        None
     }
 }
