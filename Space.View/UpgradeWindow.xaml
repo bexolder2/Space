@@ -4,9 +4,88 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space.View"
+        xmlns:customControls="clr-namespace:Space.View.CustomControls"
         mc:Ignorable="d"
         Title="UpgradeWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate x:Key="Module">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <customControls:ResourcePanel Grid.Column="0"
+                                      Grid.Row="0"
+                                      Grid.ColumnSpan="2"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Right"
+                                      Margin="0,0,10,0"/>
+
+        <ListView Grid.Row="1"
+                  Grid.RowSpan="3"
+                  Margin="10">
+            <ListView.Background>
+                <ImageBrush ImageSource="Images/bg1.jpeg"/>
+            </ListView.Background>
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4"
+                                 ScrollViewer.CanContentScroll="True"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                 ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+
+        <ListView Grid.Column="1"
+                  Grid.Row="1"
+                  Margin="10,5">
+            
+        </ListView>
+
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="1"
+                    Grid.Row="2">
+            <TextBlock Text="Description:"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Margin="10,0,0,0"/>
+            <TextBlock/>
+            
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right">
+            <Button Content="Upgrade" 
+                    Height="20"
+                    Width="100"/>
+            <Button Content="Cancel" 
+                    Height="20"
+                    Width="100"
+                    Margin="10,0,20,0"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -32,6 +32,7 @@ namespace Space.ViewModel
         }
         #endregion
 
+        #region initialization
         private void InitializeMoons()
         {
             Moon planet1 = (Moon)new MoonGenerator().Generate();
@@ -89,6 +90,7 @@ namespace Space.ViewModel
                     
             }
         }
+        #endregion
 
         private List<Point> ConvertCellsToPoints()
         {
