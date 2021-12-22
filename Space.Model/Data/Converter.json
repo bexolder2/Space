@@ -1,0 +1,35 @@
+{
+	"Converter" : [
+		{
+			"Price": "200",
+			"HP" : "-5",
+			"Level" : "1",
+			"Efficiency" : {
+				"Power" : "1",
+				"Value" : "5",
+				"ResourceType" : "Ore"
+			}
+		},
+		{
+			"Price": "270",
+			"HP" : "-3",
+			"Level" : "2",
+			"Efficiency" : {
+				"Power" : "1",
+				"Value" : "4",
+				"ResourceType" : "Ore"
+			}
+		},
+		{
+			"Price": "365",
+			"HP" : "0",
+			"Level" : "3",
+			"Efficiency" : {
+				"Power" : "1",
+				"Value" : "3",
+				"ResourceType" : "Ore"
+			}
+		}
+	]
+
+}

@@ -1,0 +1,35 @@
+{
+	"Generator" : [
+		{
+			"Price": "250",
+			"HP" : "5",
+			"Level" : "1",
+			"Efficiency" : {
+				"Power" : "2",
+				"Value" : "100",
+				"ResourceType" : ""
+			}
+		},
+		{
+			"Price": "388",
+			"HP" : "8",
+			"Level" : "2",
+			"Efficiency" : {
+				"Power" : "4",
+				"Value" : "100",
+				"ResourceType" : ""
+			}
+		},
+		{
+			"Price": "601",
+			"HP" : "10",
+			"Level" : "3",
+			"Efficiency" : {
+				"Power" : "6",
+				"Value" : "100",
+				"ResourceType" : ""
+			}
+		}
+	]
+
+}

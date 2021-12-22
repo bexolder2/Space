@@ -1,6 +1,6 @@
 ﻿namespace Space.Model.Modules
 {
-    public class Battery : BindableBase.BindableBase
+    public class Battery : BaseModel
     {
         private int limit;
 

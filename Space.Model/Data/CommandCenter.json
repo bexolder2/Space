@@ -1,0 +1,23 @@
+{
+	"CommandCenter" : [
+		{
+			"Price": "100",
+			"HP" : "10",
+			"Level" : "1",
+			"BodyLimit" : "4"
+		},
+		{
+			"Price": "300",
+			"HP" : "20",
+			"Level" : "2",
+			"BodyLimit" : "8"
+		},
+		{
+			"Price": "900",
+			"HP" : "30",
+			"Level" : "3",
+			"BodyLimit" : "12"
+		}
+	]
+
+}

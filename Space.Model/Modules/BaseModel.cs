@@ -1,8 +1,9 @@
-﻿using Space.Model.Enums;
+﻿using Space.Helpers.Interfaces;
+using Space.Model.Enums;
 
 namespace Space.Model.Modules
 {
-    public abstract class BaseModel : BindableBase.BindableBase
+    public abstract class BaseModel : BindableBase.BindableBase, IBindableModel
     {
         private int price;
         private int hp;

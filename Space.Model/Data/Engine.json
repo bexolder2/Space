@@ -1,0 +1,26 @@
+{
+	"Engine" : [
+		{
+			"Price": "200",
+			"HP" : "-10",
+			"Level" : "1",
+			"EnergyConsymptionPerBattle" : "10",
+			"EnergyConsymptionPer100Kilometers" : "50"
+		},
+		{
+			"Price": "300",
+			"HP" : "-8",
+			"Level" : "2",
+			"EnergyConsymptionPerBattle" : "8",
+			"EnergyConsymptionPer100Kilometers" : "48"
+		},
+		{
+			"Price": "450",
+			"HP" : "-5",
+			"Level" : "3",
+			"EnergyConsymptionPerBattle" : "6",
+			"EnergyConsymptionPer100Kilometers" : "45"
+		}
+	]
+
+}
