@@ -12,7 +12,7 @@ namespace Space.Helpers
         public Point Generate(List<Point> args)
         {
             Point result = new Point();
-            var freePoints = FreePointsAnalyzer.GetFreePoints(args);
+            var freePoints = UnoccupiedPointsAnalyzer.GetUnoccupiedPoints(args);
             Random rnd = new Random();
 
             int index = rnd.Next(minValue, freePoints.Count);

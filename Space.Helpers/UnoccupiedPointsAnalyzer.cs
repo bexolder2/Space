@@ -4,11 +4,11 @@ using System.Windows;
 
 namespace Space.Helpers
 {
-    public class FreePointsAnalyzer
+    public class UnoccupiedPointsAnalyzer
     {
         private static List<Point> freePoints;
 
-        static FreePointsAnalyzer()
+        static UnoccupiedPointsAnalyzer()
         {
             freePoints = new List<Point>();
 
@@ -21,7 +21,7 @@ namespace Space.Helpers
             }
         }
 
-        public static List<Point> GetFreePoints(List<Point> usedPoints)
+        public static List<Point> GetUnoccupiedPoints(List<Point> usedPoints)
         {
             if(usedPoints.Count > 0)
             {

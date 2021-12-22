@@ -43,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoordinateGenerator.cs" />
-    <Compile Include="FreePointsAnalyzer.cs" />
+    <Compile Include="UnoccupiedPointsAnalyzer.cs" />
+    <Compile Include="Interfaces\IBindableModel.cs" />
     <Compile Include="Interfaces\IGenerator.cs" />
     <Compile Include="MoonGenerator.cs" />
     <Compile Include="NameGenerator.cs" />
