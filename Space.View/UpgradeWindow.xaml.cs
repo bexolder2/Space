@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Space.Model.Enums;
+using Space.ViewModel;
+using System.Windows;
 
 namespace Space.View
 {
@@ -7,6 +9,23 @@ namespace Space.View
         public UpgradeWindow()
         {
             InitializeComponent();
+            DataContext = new UpgradeViewModel();
+            SetWindowState(WndAction.Show);
+        }
+
+        private void SetWindowState(WndAction action)
+        {
+            switch (action)
+            {
+                case WndAction.Hide:
+                    Hide();
+                    break;
+                case WndAction.Show:
+                    Show();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿using Space.Helpers;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Space.Helpers;
 using Space.Model.BindableBase;
 using Space.Model.Enums;
 using Space.Model.Modules;
+using Space.ViewModel.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Space.ViewModel
 {
@@ -19,10 +22,18 @@ namespace Space.ViewModel
         {
             Cells = new ObservableCollection<Cell>();
 
+            #region command initialization
+            GiveUpCommand = new RelayCommand(OnGiveUpCommandExecuted, CanGiveUpCommandExecute);
+            #endregion
+
             InitializeEmptyPoints();
             InitializeStation();
             InitializeMoons();
         }
+
+        #region commands
+        public ICommand GiveUpCommand { get; private set; }
+        #endregion
 
         #region properties
         public ObservableCollection<Cell> Cells
@@ -100,6 +111,13 @@ namespace Space.ViewModel
                                 .ToList();
 
             return result;
+        }
+
+        private bool CanGiveUpCommandExecute(object p) => true;
+        private void OnGiveUpCommandExecuted(object p)
+        {
+
+
         }
     }
 }

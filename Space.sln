@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.ViewModel", "Space.Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.Helpers", "Space.Helpers\Space.Helpers.csproj", "{734F7727-6684-427D-B3DD-969D13315241}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space.Infrastructure", "Space.Infrastructure\Space.Infrastructure.csproj", "{192A7A85-0455-456B-8808-AEB0823D8A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{734F7727-6684-427D-B3DD-969D13315241}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{734F7727-6684-427D-B3DD-969D13315241}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{734F7727-6684-427D-B3DD-969D13315241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{192A7A85-0455-456B-8808-AEB0823D8A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{192A7A85-0455-456B-8808-AEB0823D8A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{192A7A85-0455-456B-8808-AEB0823D8A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{192A7A85-0455-456B-8808-AEB0823D8A67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

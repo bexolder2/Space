@@ -8,7 +8,8 @@
              d:DesignHeight="20" d:DesignWidth="800"
              x:Name="Root">
     <StackPanel Orientation="Horizontal">
-        <Button Margin="5,0">
+        <Button Margin="5,0"
+                Click="OpenUpgradeWnd">
             <Button.Content>
                 <TextBlock>
                     <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Upgrade}"/>
@@ -17,7 +18,8 @@
             </Button.Content>
         </Button>
 
-        <Button Margin="5,0">
+        <Button Margin="5,0"
+                Command="{Binding GiveUpCommand}">
             <Button.Content>
                 <TextBlock>
                     <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Capitulation}"/>

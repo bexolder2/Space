@@ -10,5 +10,10 @@ namespace Space.View.CustomControls
         {
             InitializeComponent();
         }
+
+        private void OpenUpgradeWnd(object sender, RoutedEventArgs e)
+        {
+            var upgradeWnd = new UpgradeWindow();
+        }
     }
 }
