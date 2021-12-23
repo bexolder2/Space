@@ -3,7 +3,7 @@
 		{
 			"Price": "200",
 			"HP" : "-5",
-			"Level" : "1",
+			"Level" : "0",
 			"Efficiency" : {
 				"Power" : "1",
 				"Value" : "5",
@@ -13,7 +13,7 @@
 		{
 			"Price": "270",
 			"HP" : "-3",
-			"Level" : "2",
+			"Level" : "1",
 			"Efficiency" : {
 				"Power" : "1",
 				"Value" : "4",
@@ -23,7 +23,7 @@
 		{
 			"Price": "365",
 			"HP" : "0",
-			"Level" : "3",
+			"Level" : "2",
 			"Efficiency" : {
 				"Power" : "1",
 				"Value" : "3",

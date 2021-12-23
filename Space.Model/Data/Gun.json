@@ -3,19 +3,19 @@
 		{
 			"Price": "150",
 			"HP" : "-5",
-			"Level" : "1",
+			"Level" : "0",
 			"Damage" : "50"
 		},
 		{
 			"Price": "270",
 			"HP" : "-3",
-			"Level" : "2",
+			"Level" : "1",
 			"Damage" : "60"
 		},
 		{
 			"Price": "486",
 			"HP" : "-1",
-			"Level" : "3",
+			"Level" : "2",
 			"Damage" : "75"
 		}
 	]

@@ -3,19 +3,19 @@
 		{
 			"Price": "75",
 			"HP" : "10",
-			"Level" : "1",
+			"Level" : "0",
 			"CollectPerCruise" : "20"
 		},
 		{
 			"Price": "131",
 			"HP" : "12",
-			"Level" : "2",
+			"Level" : "1",
 			"CollectPerCruise" : "30"
 		},
 		{
 			"Price": "230",
 			"HP" : "15",
-			"Level" : "3",
+			"Level" : "2",
 			"CollectPerCruise" : "40"
 		}
 	]

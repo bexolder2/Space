@@ -3,19 +3,19 @@
 		{
 			"Price": "50",
 			"HP" : "10",
-			"Level" : "1",
+			"Level" : "0",
 			"Limit" : "2000"
 		},
 		{
 			"Price": "65",
 			"HP" : "15",
-			"Level" : "2",
+			"Level" : "1",
 			"Limit" : "3000"
 		},
 		{
 			"Price": "85",
 			"HP" : "20",
-			"Level" : "3",
+			"Level" : "2",
 			"Limit" : "4000"
 		}
 	]
