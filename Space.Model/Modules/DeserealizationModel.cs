@@ -5,7 +5,6 @@ namespace Space.Model.Modules
 {
     public class DeserealizationModel
     {
-        [JsonProperty("Battery")]
         public List<Battery> Battery { get; set; }
         public List<Body> Body { get; set; }
         public List<Collector> Collector { get; set; }

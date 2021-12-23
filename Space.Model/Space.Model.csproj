@@ -50,9 +50,11 @@
     <Compile Include="Enums\Action.cs" />
     <Compile Include="Enums\CellType.cs" />
     <Compile Include="Enums\Level.cs" />
+    <Compile Include="Enums\Module.cs" />
     <Compile Include="Enums\Moon.cs" />
     <Compile Include="Enums\ResourceType.cs" />
     <Compile Include="Enums\WndAction.cs" />
+    <Compile Include="Modules\Actor.cs" />
     <Compile Include="Modules\Asteroid.cs" />
     <Compile Include="Modules\BaseModel.cs" />
     <Compile Include="Modules\Battery.cs" />
@@ -66,7 +68,11 @@
     <Compile Include="Modules\Generator.cs" />
     <Compile Include="Modules\Gun.cs" />
     <Compile Include="Modules\Body.cs" />
+    <Compile Include="Modules\Pirate.cs" />
+    <Compile Include="Modules\Player.cs" />
     <Compile Include="Modules\Repairer.cs" />
+    <Compile Include="Modules\ResourcesBase.cs" />
+    <Compile Include="Modules\Spaceship.cs" />
     <Compile Include="Modules\Storage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
