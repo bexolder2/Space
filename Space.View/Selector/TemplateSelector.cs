@@ -9,7 +9,7 @@ namespace Space.View.Selector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var param = (CellType)(item as Cell).CellType;
+            var param = (item as Cell).CellType;
             var element = container as FrameworkElement;
             DataTemplate result = null;
 

@@ -1,8 +1,10 @@
 ﻿using Space.Helpers.Interfaces;
 using Space.Infrastructure.Deserializer;
 using Space.Model.BindableBase;
+using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -11,7 +13,7 @@ namespace Space.ViewModel
 {
     public class UpgradeViewModel : BindableBase
     {
-        private List<IBindableModel> modules;
+        private Dictionary<IBindableModel, Module> modules;
 
         public UpgradeViewModel()
         {
@@ -20,7 +22,7 @@ namespace Space.ViewModel
             CancelCommand = new RelayCommand(OnCancelCommandExecuted, CanCancelCommandExecute);
             #endregion
 
-            modules = new List<IBindableModel>();
+            modules = new Dictionary<IBindableModel, Module>();
 
             Initialize();
         }
@@ -31,7 +33,7 @@ namespace Space.ViewModel
         #endregion
 
         #region properties
-        public List<IBindableModel> Modules
+        public Dictionary<IBindableModel, Module> Modules
         {
             get => modules;
             set => Set(ref modules, value);
@@ -41,8 +43,25 @@ namespace Space.ViewModel
         private void Initialize()
         {
             var result = JsonDeserializer.InitializeModules();
-            //modules = result;
+            FillModules(result.Battery, Module.Battery);
+            FillModules(result.Body, Module.Body);
+            FillModules(result.Collector, Module.Collector);
+            FillModules(result.CommandCenter, Module.CommandCenter);
+            FillModules(result.Converter, Module.Converter);
+            FillModules(result.Engine, Module.Engine);
+            FillModules(result.Generator, Module.Generator);
+            FillModules(result.Gun, Module.Gun);
+            //FillModules(result.Repairer, Module.Repairer);
+            //FillModules(result.Storage, Module.Storage);
         }
+
+        private void FillModules<T>(List<T> module, Module moduleType) where T : IBindableModel 
+        {
+            foreach(T item in module)
+            {
+                modules.Add(item, moduleType);
+            }
+        } 
 
         private bool CanUpgradeCommandExecute(object p) => true;
         private void OnUpgradeCommandExecuted(object p)

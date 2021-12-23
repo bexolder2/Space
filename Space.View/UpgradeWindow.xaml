@@ -3,15 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Space.View"
         xmlns:customControls="clr-namespace:Space.View.CustomControls"
+        xmlns:selector="clr-namespace:Space.View.Selector"
         mc:Ignorable="d"
         Title="UpgradeWindow" 
         Height="450" 
         Width="800">
 
     <Window.Resources>
-        <DataTemplate x:Key="Module">
+        <DataTemplate x:Key="CommandCenter">
             <Grid Height="80"
                   Width="80">
                 <Image/>
@@ -22,6 +22,128 @@
                              Margin="5,0"/>
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="Body">
+            <Grid Height="80"
+                  Width="80">
+                <Grid.Background>
+                    <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
+                </Grid.Background>
+                <Image Source="Images/body.png"/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"
+                             Value="2"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Engine">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Battery">
+            <Grid Height="80"
+                  Width="80">
+                <Grid.Background>
+                    <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
+                </Grid.Background>
+                <Image Source="Images/battery.png"/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"
+                             Value="1"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Storage">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Gun">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Collector">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Converter">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Generator">
+            <Grid Height="80"
+                  Width="80">
+                <Grid.Background>
+                    <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
+                </Grid.Background>
+                <Image Source="Images/generator.png"/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"
+                             Value="3"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Repairer">
+            <Grid Height="80"
+                  Width="80">
+                <Image/>
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <selector:ModuleSelector x:Key="ModuleSelector"/>
     </Window.Resources>
     
     <Grid>
@@ -45,9 +167,11 @@
 
         <ListView Grid.Row="1"
                   Grid.RowSpan="3"
-                  Margin="10">
+                  Margin="10"
+                  ItemsSource="{Binding MainViewModel.Player.Spaceship.ShipModules, Source={StaticResource Locator}}"
+                  ItemTemplateSelector="{StaticResource ModuleSelector}">
             <ListView.Background>
-                <ImageBrush ImageSource="Images/bg1.jpeg"/>
+                <ImageBrush ImageSource="Images/bg_space.jpg"/>
             </ListView.Background>
 
             <ListView.ItemsPanel>

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Space.Helpers;
+using Space.Helpers.Interfaces;
 using Space.Model.BindableBase;
 using Space.Model.Enums;
 using Space.Model.Modules;
@@ -17,6 +18,7 @@ namespace Space.ViewModel
         private ObservableCollection<Cell> cells;
         private const int maxCellNumber = 1600;
         private const int numberRowsOrColumns = 40;
+        private Player player;
 
         public MainViewModel()
         {
@@ -29,6 +31,7 @@ namespace Space.ViewModel
             InitializeEmptyPoints();
             InitializeStation();
             InitializeMoons();
+            InitializePlayer();
         }
 
         #region commands
@@ -40,6 +43,12 @@ namespace Space.ViewModel
         {
             get => cells;
             set => Set(ref cells, value);
+        }
+
+        public Player Player
+        {
+            get => player;
+            set => Set(ref player, value);
         }
         #endregion
 
@@ -100,6 +109,25 @@ namespace Space.ViewModel
                 }
                     
             }
+        }
+
+        private void InitializePlayer()
+        {
+            Player = new Player();
+            Player.Spaceship = new Spaceship();
+            Player.Resources = new ResourcesBase
+            {
+                CryptocurrencyValue = 2500,
+                EnergyValue = 500000,
+                OreValue = 0
+            };
+
+            #region test data
+            Player.Spaceship.ShipModules = new Dictionary<IBindableModel, Module>();
+            Player.Spaceship.ShipModules.Add(new Battery(), Module.Battery);
+            Player.Spaceship.ShipModules.Add(new Body(), Module.Body);
+            Player.Spaceship.ShipModules.Add(new Generator(), Module.Generator);
+            #endregion
         }
         #endregion
 

@@ -73,6 +73,7 @@
     <Compile Include="FightWindow.xaml.cs">
       <DependentUpon>FightWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Selector\ModuleSelector.cs" />
     <Compile Include="Selector\TemplateSelector.cs" />
     <Compile Include="UpgradeWindow.xaml.cs">
       <DependentUpon>UpgradeWindow.xaml</DependentUpon>
@@ -162,6 +163,10 @@
     <Resource Include="Images\station.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Space.Helpers\Space.Helpers.csproj">
+      <Project>{734F7727-6684-427D-B3DD-969D13315241}</Project>
+      <Name>Space.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Space.Model\Space.Model.csproj">
       <Project>{318A2B53-FB5D-4DA6-8334-7B922131CF6D}</Project>
       <Name>Space.Model</Name>
@@ -173,6 +178,25 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\asteroid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bg_space.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\battery.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\body.png" />
+    <Resource Include="Images\collector.png" />
+    <Resource Include="Images\command_center.png" />
+    <Resource Include="Images\engine.png" />
+    <Resource Include="Images\generator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\gun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\storage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
