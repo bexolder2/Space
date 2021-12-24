@@ -1,12 +1,13 @@
 ﻿using Space.Helpers.Interfaces;
+using Space.Infrastructure.Converters;
 using Space.Infrastructure.Deserializer;
 using Space.Model.BindableBase;
 using Space.Model.Enums;
-using Space.Model.Modules;
 using Space.ViewModel.Command;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Space.ViewModel
@@ -14,6 +15,11 @@ namespace Space.ViewModel
     public class UpgradeViewModel : BindableBase
     {
         private Dictionary<IBindableModel, Module> modules;
+        private KeyValuePair<IBindableModel, Module> selectedModule;
+        private Dictionary<IBindableModel, Module> selectedModules;
+        private KeyValuePair<IBindableModel, Module> selectedLevel;
+        private string additionalSelectedLevelData;
+        private IBindableModelToModelConverter modelConverter = new IBindableModelToModelConverter();
 
         public UpgradeViewModel()
         {
@@ -25,6 +31,7 @@ namespace Space.ViewModel
             modules = new Dictionary<IBindableModel, Module>();
 
             Initialize();
+            InitializeSelectedModules();
         }
 
         #region commands
@@ -38,8 +45,42 @@ namespace Space.ViewModel
             get => modules;
             set => Set(ref modules, value);
         }
+
+        public KeyValuePair<IBindableModel, Module> SelectedModule
+        {
+            get => selectedModule;
+            set
+            {
+                Set(ref selectedModule, value);
+                SelectedModules = Modules.Where(item => item.Value == value.Value)
+                                         .ToDictionary(_key => _key.Key, _value => _value.Value);
+            }
+        }
+
+        public Dictionary<IBindableModel, Module> SelectedModules
+        {
+            get => selectedModules;
+            set => Set(ref selectedModules, value);
+        }
+
+        public KeyValuePair<IBindableModel, Module> SelectedLevel
+        {
+            get => selectedLevel;
+            set
+            {
+                Set(ref selectedLevel, value);
+                AdditionalSelectedLevelData = modelConverter.Convert(value, null, null, null).ToString();
+            }
+        }
+
+        public string AdditionalSelectedLevelData
+        {
+            get => additionalSelectedLevelData;
+            set => Set(ref additionalSelectedLevelData, value);
+        } 
         #endregion
 
+        #region initializers
         private void Initialize()
         {
             var result = JsonDeserializer.InitializeModules();
@@ -61,9 +102,24 @@ namespace Space.ViewModel
             {
                 modules.Add(item, moduleType);
             }
-        } 
+        }
 
-        private bool CanUpgradeCommandExecute(object p) => true;
+        private void InitializeSelectedModules()
+        {
+            SelectedModule = new KeyValuePair<IBindableModel, Module>();
+            SelectedModule = Modules.FirstOrDefault();
+            SelectedModules = new Dictionary<IBindableModel, Module>();
+
+            SelectedModules = Modules.Where(item => item.Value == SelectedModule.Value)
+                                     .ToDictionary(_key => _key.Key, _value => _value.Value);
+        }
+        #endregion
+
+        private bool CanUpgradeCommandExecute(object p)
+        {
+            
+            return true;
+        }
         private void OnUpgradeCommandExecuted(object p)
         {
             

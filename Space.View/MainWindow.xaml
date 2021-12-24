@@ -65,14 +65,21 @@
         <Grid Grid.Row="0"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             
             <customControls:ResourcePanel Grid.Column="0"
-                                          VerticalAlignment="Center" />
+                                          VerticalAlignment="Center"
+                                          Cryptocurrency="{Binding MainViewModel.Player.Resources.CryptocurrencyValue, 
+                                                            Source={StaticResource Locator}}"
+                                          Energy="{Binding MainViewModel.Player.Resources.EnergyValue, 
+                                                            Source={StaticResource Locator}}"
+                                          Ore="{Binding MainViewModel.Player.Resources.OreValue, 
+                                                            Source={StaticResource Locator}}"/>
             <customControls:SpaceshipPropertiesPanel Grid.Column="1"
+                                                     Margin="10,0"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
             <customControls:TopButtonsPanel Grid.Column="2"

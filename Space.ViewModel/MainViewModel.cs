@@ -124,9 +124,9 @@ namespace Space.ViewModel
 
             #region test data
             Player.Spaceship.ShipModules = new Dictionary<IBindableModel, Module>();
-            Player.Spaceship.ShipModules.Add(new Battery(), Module.Battery);
-            Player.Spaceship.ShipModules.Add(new Body(), Module.Body);
-            Player.Spaceship.ShipModules.Add(new Generator(), Module.Generator);
+            Player.Spaceship.ShipModules.Add(new Battery { Level = Level.First }, Module.Battery);
+            Player.Spaceship.ShipModules.Add(new Body { Level = Level.Second }, Module.Body);
+            Player.Spaceship.ShipModules.Add(new Generator { Level = Level.Third }, Module.Generator);
             #endregion
         }
         #endregion
