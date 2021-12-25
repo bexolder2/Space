@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Converters\CollectionToUniqueCollectionConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
-    <Compile Include="Converters\IBindableModelToModelConverter.cs" />
+    <Compile Include="Converters\IBindableModelToModelTextConverter.cs" />
     <Compile Include="Deserializer\JsonDeserializer.cs" />
     <Compile Include="Extensions\LinqExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

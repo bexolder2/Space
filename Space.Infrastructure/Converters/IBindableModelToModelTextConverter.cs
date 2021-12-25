@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Space.Infrastructure.Converters
 {
-    public class IBindableModelToModelConverter : IValueConverter
+    public class IBindableModelToModelTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,7 +20,7 @@ namespace Space.Infrastructure.Converters
                 case Module.Battery:
                     {
                         var battery = (Battery)model.Key;
-                        result.Append("Limit: ");
+                        result.Append("\nLimit: ");
                         result.Append(battery.Limit);
                     } 
                     break;
@@ -33,14 +33,14 @@ namespace Space.Infrastructure.Converters
                 case Module.Collector:
                     {
                         var collector = (Collector)model.Key;
-                        result.Append("Ore per cruice: ");
+                        result.Append("\nOre per cruice: ");
                         result.Append(collector.CollectPerCruise);
                     }
                     break;
                 case Module.CommandCenter:
                     {
                         var command = (CommandCenter)model.Key;
-                        result.Append("Body limit: ");
+                        result.Append("\nBody limit: ");
                         result.Append(command.BodyLimit);
                     }
                     break;
@@ -53,7 +53,7 @@ namespace Space.Infrastructure.Converters
                 case Module.Engine:
                     {
                         var engine = (Engine)model.Key;
-                        result.Append("Energy consymption per battle: ");
+                        result.Append("\nEnergy consymption per battle: ");
                         result.Append(engine.EnergyConsymptionPerBattle);
                         result.Append("\nEnergy consymption per 100 km: ");
                         result.Append(engine.EnergyConsymptionPer100Kilometers);
@@ -68,7 +68,7 @@ namespace Space.Infrastructure.Converters
                 case Module.Gun:
                     {
                         var gun = (Gun)model.Key;
-                        result.Append("Damage: ");
+                        result.Append("\nDamage: ");
                         result.Append(gun.Damage);
                     }
                     break;
@@ -81,7 +81,7 @@ namespace Space.Infrastructure.Converters
                 case Module.Storage:
                     {
                         var storage = (Storage)model.Key;
-                        result.Append("Ore limit: ");
+                        result.Append("\nOre limit: ");
                         result.Append(storage.Limit);
                     }
                     break;
