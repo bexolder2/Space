@@ -9,7 +9,6 @@ namespace Space.View
         public UpgradeWindow()
         {
             InitializeComponent();
-            DataContext = new UpgradeViewModel();
             SetWindowState(WndAction.Show);
         }
 

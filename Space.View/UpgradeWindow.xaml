@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="UpgradeWindow" 
         Height="450" 
-        Width="800">
+        Width="800"
+        DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}">
 
     <Window.Resources>
         <DataTemplate x:Key="CommandCenter">
@@ -260,7 +261,7 @@
         <ListView Grid.Row="1"
                   Grid.RowSpan="3"
                   Margin="10"
-                  ItemsSource="{Binding MainViewModel.Player.Spaceship.ShipModules, Source={StaticResource Locator}}"
+                  ItemsSource="{Binding PlayersShipModules}"
                   ItemTemplateSelector="{StaticResource ModuleSelector}">
             <ListView.Background>
                 <ImageBrush ImageSource="Images/bg_space.jpg"/>
@@ -334,7 +335,7 @@
 
             <TextBlock Margin="10,0" DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}">
                 <Run Text="Other features: " FontWeight="Bold"/>
-                <Run Text="{Binding UpgradeViewModel.AdditionalSelectedLevelData, Source={StaticResource Locator}, 
+                <Run Text="{Binding AdditionalSelectedLevelData, 
                             Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </TextBlock>
         </StackPanel>

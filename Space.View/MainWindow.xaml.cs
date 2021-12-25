@@ -8,7 +8,6 @@ namespace Space.View
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

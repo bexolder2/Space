@@ -202,5 +202,11 @@
   <ItemGroup>
     <Resource Include="Images\storage.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\converter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\repairer.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
