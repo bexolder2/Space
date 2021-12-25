@@ -5,6 +5,7 @@ using Space.Model.BindableBase;
 using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -123,10 +124,16 @@ namespace Space.ViewModel
             };
 
             #region test data
-            Player.Spaceship.ShipModules = new Dictionary<IBindableModel, Module>();
-            Player.Spaceship.ShipModules.Add(new Battery { Level = Level.First }, Module.Battery);
-            Player.Spaceship.ShipModules.Add(new Body { Level = Level.Second }, Module.Body);
-            Player.Spaceship.ShipModules.Add(new Generator { Level = Level.Third }, Module.Generator);
+            Player.Spaceship.ShipModules = new Dictionary<Dictionary<IBindableModel, Module>, int>();
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new CommandCenter { Level = Level.First }, Module.CommandCenter } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Battery { Level = Level.Second }, Module.Battery } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Storage { Level = Level.Third }, Module.Storage } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Gun { Level = Level.First }, Module.Gun } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Collector { Level = Level.Second }, Module.Collector } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Converter { Level = Level.Third }, Module.Converter } }, 1);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Body { Level = Level.Second }, Module.Body }, { new Body { Level = Level.Second }, Module.Body } }, 2);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Engine { Level = Level.Third }, Module.Engine }, { new Engine { Level = Level.Third }, Module.Engine } }, 2);
+            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Repairer { Level = Level.First }, Module.Repairer }, { new Repairer { Level = Level.Third }, Module.Repairer } }, 2);
             #endregion
         }
         #endregion
@@ -134,9 +141,10 @@ namespace Space.ViewModel
         private List<Point> ConvertCellsToPoints()
         {
             List<Point> result = new List<Point>();
-            result = Cells.Where(cell => cell.CellType != CellType.Empty).Join(Cells, x => x.Coordinates, y => y.Coordinates, 
+            result = Cells.Where(cell => cell.CellType != CellType.Empty)
+                          .Join(Cells, x => x.Coordinates, y => y.Coordinates, 
                                 (x, y) => new Point { X = x.Coordinates.X, Y = y.Coordinates.Y })
-                                .ToList();
+                          .ToList();
 
             return result;
         }

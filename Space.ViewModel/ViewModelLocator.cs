@@ -13,7 +13,13 @@ namespace Space.ViewModel
             SimpleIoc.Default.Register<UpgradeViewModel>();
         }
 
-        public MainViewModel MainViewModel => ServiceLocator.Current.GetInstance<MainViewModel>();
-        public UpgradeViewModel UpgradeViewModel => ServiceLocator.Current.GetInstance<UpgradeViewModel>();
+        public MainViewModel MainViewModel
+        {
+            get => ServiceLocator.Current.GetInstance<MainViewModel>();
+        }
+        public UpgradeViewModel UpgradeViewModel
+        {
+            get => ServiceLocator.Current.GetInstance<UpgradeViewModel>();
+        }
     }
 }
