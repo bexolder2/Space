@@ -9,7 +9,7 @@ namespace Space.Model.Modules
         private int hp;
         private int damage;
         private int availablePowerReserve;
-        private Dictionary<Dictionary<IBindableModel, Module>, int> shipModules;
+        private List<KeyValuePair<IBindableModel, Module>> shipModules;
 
         #region properties
         public int HP
@@ -30,7 +30,7 @@ namespace Space.Model.Modules
             set => Set(ref availablePowerReserve, value);
         }
 
-        public Dictionary<Dictionary<IBindableModel, Module>, int> ShipModules
+        public List<KeyValuePair<IBindableModel, Module>> ShipModules
         {
             get => shipModules;
             set => Set(ref shipModules, value);

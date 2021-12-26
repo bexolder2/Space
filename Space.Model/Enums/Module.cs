@@ -11,6 +11,7 @@
         Collector,
         Converter,
         Generator,
-        Repairer
+        Repairer,
+        EmptyBody
     }
 }

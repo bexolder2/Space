@@ -5,7 +5,6 @@ using Space.Model.BindableBase;
 using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -34,6 +33,8 @@ namespace Space.ViewModel
             InitializeMoons();
             InitializePlayer();
             InitializeTestData();
+
+            Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
         }
 
         #region commands
@@ -125,16 +126,21 @@ namespace Space.ViewModel
             };
 
             #region test data
-            Player.Spaceship.ShipModules = new Dictionary<Dictionary<IBindableModel, Module>, int>();
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new CommandCenter { Level = Level.First }, Module.CommandCenter } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Battery { Level = Level.Second }, Module.Battery } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Storage { Level = Level.Third }, Module.Storage } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Gun { Level = Level.First }, Module.Gun } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Collector { Level = Level.Second }, Module.Collector } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Converter { Level = Level.Third }, Module.Converter } }, 1);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Body { Level = Level.Second }, Module.Body }, { new Body { Level = Level.Second }, Module.Body } }, 2);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Engine { Level = Level.Third }, Module.Engine }, { new Engine { Level = Level.Third }, Module.Engine } }, 2);
-            Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Repairer { Level = Level.First }, Module.Repairer }, { new Repairer { Level = Level.Third }, Module.Repairer } }, 2);
+            Player.Spaceship.ShipModules = new List<KeyValuePair<IBindableModel, Module>>();
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new CommandCenter { Level = Level.First }, Module.CommandCenter));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Battery { Level = Level.Second }, Module.Battery));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Storage { Level = Level.Third }, Module.Storage));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Gun { Level = Level.First }, Module.Gun));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Collector { Level = Level.Second }, Module.Collector));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Converter { Level = Level.Third }, Module.Converter));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { Level = Level.Second }, Module.Body));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { Level = Level.Second }, Module.Body));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { Level = Level.Third }, Module.Engine));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { Level = Level.Third }, Module.Engine));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { Level = Level.First }, Module.Repairer));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { Level = Level.Third }, Module.Repairer));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.Third }, Module.EmptyBody));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.Third }, Module.EmptyBody));
             #endregion
         }
 
@@ -190,6 +196,11 @@ namespace Space.ViewModel
             });
         }
         #endregion
+
+        public void UpdateShipModules(List<KeyValuePair<IBindableModel, Module>> newModules)
+        {
+            Player.Spaceship.ShipModules = newModules;
+        }
 
         private List<Point> ConvertCellsToPoints()
         {

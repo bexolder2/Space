@@ -64,6 +64,7 @@
     <Compile Include="Modules\Converter.cs" />
     <Compile Include="Modules\DeserealizationModel.cs" />
     <Compile Include="Modules\Efficiency.cs" />
+    <Compile Include="Modules\EmptyBody.cs" />
     <Compile Include="Modules\Engine.cs" />
     <Compile Include="Modules\Generator.cs" />
     <Compile Include="Modules\Gun.cs" />

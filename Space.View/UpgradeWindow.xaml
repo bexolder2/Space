@@ -11,7 +11,9 @@
         Title="UpgradeWindow" 
         Height="450" 
         Width="800"
-        DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}">
+        DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}"
+        WindowStyle="None"
+        MouseDown="Window_MouseDown">
 
     <Window.Resources>
         <proxy:BindingProxy x:Key="Proxy" Data="{Binding}" />
@@ -304,6 +306,27 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="EmptyBody">
+            <Grid Height="80"
+                  Width="80">
+                <Grid.Background>
+                    <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
+                </Grid.Background>
+
+                <ProgressBar Minimum="0" 
+                             Maximum="3"
+                             Height="10"
+                             VerticalAlignment="Bottom"
+                             Margin="5,0"
+                             Value="{Binding Key.Level, Converter={StaticResource EnumToIntConverter}}"/>
+                <TextBlock VerticalAlignment="Top"
+                           Text="{Binding Value}"
+                           FontWeight="Bold"
+                           TextTrimming="CharacterEllipsis"
+                           HorizontalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+
         <selector:ModuleSelector x:Key="ModuleSelector"/>
     </Window.Resources>
     
@@ -380,7 +403,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ListView Grid.Row="1"
+            <ListView x:Name="levels"
+                      Grid.Row="1"
                       Margin="10,5"
                       ItemsSource="{Binding SelectedModules}"
                       ItemTemplateSelector="{StaticResource ModuleSelector}"
@@ -430,11 +454,13 @@
             <Button Content="Upgrade" 
                     Height="20"
                     Width="100"
-                    Command="{Binding UpgradeViewModel.UpgradeCommand, Source={StaticResource Locator}}"/>
+                    Command="{Binding UpgradeCommand}"
+                    CommandParameter="{Binding SelectedItem, ElementName=levels}"/>
             <Button Content="Cancel" 
                     Height="20"
                     Width="100"
-                    Margin="10,0,20,0"/>
+                    Margin="10,0,20,0"
+                    Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

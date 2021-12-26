@@ -41,7 +41,7 @@ namespace Space.View.Selector
                     result = element.FindResource("Battery") as DataTemplate;
                     break;
                 case Module.Body:
-                    result = element.FindResource("Body") as DataTemplate;
+                    result = element.FindResource("EmptyBody") as DataTemplate;
                     break;
                 case Module.Collector:
                     result = element.FindResource("Collector") as DataTemplate;
@@ -66,6 +66,9 @@ namespace Space.View.Selector
                     break;
                 case Module.Storage:
                     result = element.FindResource("Storage") as DataTemplate;
+                    break;
+                case Module.EmptyBody:
+                    result = element.FindResource("EmptyBody") as DataTemplate;
                     break;
             }
 

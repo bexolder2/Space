@@ -1,4 +1,5 @@
-﻿using Space.Helpers.Interfaces;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Space.Helpers.Interfaces;
 using Space.Infrastructure.Converters;
 using Space.Infrastructure.Deserializer;
 using Space.Model.BindableBase;
@@ -6,6 +7,7 @@ using Space.Model.Constants;
 using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -21,8 +23,8 @@ namespace Space.ViewModel
         private KeyValuePair<IBindableModel, Module> selectedLevel;
         private string additionalSelectedLevelData;
 
-        private Dictionary<Dictionary<IBindableModel, Module>, int> ship;
         private List<KeyValuePair<IBindableModel, Module>> playersShipModules;
+        private List<Body> bodies;
         private int newSelectedModuleIndex;
         private IBindableModelToModelTextConverter modelConverter = new IBindableModelToModelTextConverter();
 
@@ -51,6 +53,12 @@ namespace Space.ViewModel
         #endregion
 
         #region properties
+        public List<Body> Bodies
+        {
+            get => bodies;
+            set => Set(ref bodies, value);
+        }
+
         public int NewSelectedModuleIndex
         {
             get => newSelectedModuleIndex;
@@ -61,16 +69,6 @@ namespace Space.ViewModel
         {
             get => playersShipModules;
             set => Set(ref playersShipModules, value);
-        }
-
-        public Dictionary<Dictionary<IBindableModel, Module>, int> Ship
-        {
-            get => ship;
-            set
-            {
-                Set(ref ship, value);
-                PlayersShipModules = InitializePlayersModulesForListView();
-            }
         }
 
         public Dictionary<IBindableModel, Module> Modules
@@ -149,23 +147,27 @@ namespace Space.ViewModel
 
         private void InitializeShip()
         {
-            Ship = new Dictionary<Dictionary<IBindableModel, Module>, int>();
-            Ship = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.ShipModules;
-        }
+            PlayersShipModules = new List<KeyValuePair<IBindableModel, Module>>();
+            PlayersShipModules = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.ShipModules;
+            Bodies = new List<Body>();
 
-        private List<KeyValuePair<IBindableModel, Module>> InitializePlayersModulesForListView()
-        {
-            var result = new List<KeyValuePair<IBindableModel, Module>>();
-
-            foreach(var item in Ship)
+            foreach(var item in PlayersShipModules)
             {
-                foreach(var item2 in item.Key)
+                if(item.Value is Module.Body)
                 {
-                    result.Add(item2);
+                    Bodies.Add((Body)item.Key);
+                    Bodies.LastOrDefault().Index = PlayersShipModules.IndexOf(item);
                 }
             }
 
-            return result;
+            for (int i = 0; i < Bodies.Count; i++)
+            {
+                if (i > 0)
+                {
+                    PlayersShipModules.RemoveAt(Bodies[i].Index - 1);
+                }
+                else PlayersShipModules.RemoveAt(Bodies[i].Index);
+            }
         }
         #endregion
 
@@ -193,9 +195,11 @@ namespace Space.ViewModel
         private Dictionary<Module, int> GetShipModules()
         {
             Dictionary<Module, int> shipModules = new Dictionary<Module, int>();
-            foreach (var item in Ship)
+
+            foreach (var module in Enum.GetValues(typeof(Module)))
             {
-                shipModules.Add(item.Key.FirstOrDefault().Value, item.Value);
+                int numberOfModules = PlayersShipModules.Where(x => x.Value == (Module)module).ToList().Count;
+                shipModules.Add((Module)module, numberOfModules);
             }
 
             return shipModules;
@@ -334,17 +338,43 @@ namespace Space.ViewModel
         {
             return true;
         }
-        private void OnUpgradeCommandExecuted(object p)
-        {
+        private void OnUpgradeCommandExecuted(object selectedItem) //TODO: add buy logic and validation
+        { 
+            if (selectedItem != null)
+            {
+                var newModule = (KeyValuePair<IBindableModel, Module>)selectedItem;
 
+                if(newModule.Value is Module.Body)
+                {
+                    Bodies.Add(new Body
+                               {
+                                   HP = ((Body)newModule.Key).HP,
+                                   Level = ((Body)newModule.Key).Level,
+                                   Index = PlayersShipModules.Count
+                               });
 
+                    for (int i = 0; i < Constants.NumberOfModulesInOneBody; i++)
+                    {
+                        PlayersShipModules.Add(new KeyValuePair<IBindableModel, Module>(
+                            new EmptyBody
+                            {
+                                HP = ((Body)newModule.Key).HP,
+                                Level = ((Body)newModule.Key).Level
+                            }, Module.EmptyBody));
+                    }        
+                }
+            }
         }
 
         private bool CanCancelCommandExecute(object p) => true;
         private void OnCancelCommandExecuted(object p)
         {
+            foreach(var item in Bodies)
+            {
+                PlayersShipModules.Insert(item.Index, new KeyValuePair<IBindableModel, Module>(item, Module.Body));
+            }
 
-
+            Messenger.Default.Send(PlayersShipModules);
         }
 
         private bool CanMoveCommandExecute(object p)
