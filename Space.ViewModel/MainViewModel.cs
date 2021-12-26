@@ -33,6 +33,7 @@ namespace Space.ViewModel
             InitializeStation();
             InitializeMoons();
             InitializePlayer();
+            InitializeTestData();
         }
 
         #region commands
@@ -135,6 +136,58 @@ namespace Space.ViewModel
             Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Engine { Level = Level.Third }, Module.Engine }, { new Engine { Level = Level.Third }, Module.Engine } }, 2);
             Player.Spaceship.ShipModules.Add(new Dictionary<IBindableModel, Module> { { new Repairer { Level = Level.First }, Module.Repairer }, { new Repairer { Level = Level.Third }, Module.Repairer } }, 2);
             #endregion
+        }
+
+        private void InitializeTestData()
+        {
+            Cells.RemoveAt(0);
+            Cells.Insert(0, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.Player,
+                Name = "",
+                Coordinates = new Point { X = 0, Y = 0 }
+            });
+            Cells.RemoveAt(1);
+            Cells.Insert(1, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.Asteroid,
+                Name = "",
+                Coordinates = new Point { X = 1, Y = 0 }
+            });
+            Cells.RemoveAt(2);
+            Cells.Insert(2, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.PlayerAndAsteroid,
+                Name = "",
+                Coordinates = new Point { X = 2, Y = 0 }
+            });
+            Cells.RemoveAt(3);
+            Cells.Insert(3, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.PlayerAndPlanet1,
+                Name = "",
+                Coordinates = new Point { X = 3, Y = 0 }
+            });
+            Cells.RemoveAt(4);
+            Cells.Insert(4, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.PlayerAndPlanet2,
+                Name = "",
+                Coordinates = new Point { X = 4, Y = 0 }
+            });
+            Cells.RemoveAt(5);
+            Cells.Insert(5, new Cell
+            {
+                CellAction = Action.None,
+                CellType = CellType.PlayerAndStation,
+                Name = "",
+                Coordinates = new Point { X = 5, Y = 0 }
+            });
         }
         #endregion
 

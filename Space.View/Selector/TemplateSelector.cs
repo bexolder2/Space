@@ -33,10 +33,19 @@ namespace Space.View.Selector
                         result = element.FindResource("AsteroidCell") as DataTemplate;
                         break;
                     case CellType.Player:
+                        result = element.FindResource("PlayerCell") as DataTemplate;
                         break;
                     case CellType.PlayerAndAsteroid:
+                        result = element.FindResource("PlayerAndAsteroidCell") as DataTemplate;
                         break;
                     case CellType.PlayerAndStation:
+                        result = element.FindResource("PlayerAndStationCell") as DataTemplate;
+                        break;
+                    case CellType.PlayerAndPlanet1:
+                        result = element.FindResource("PlayerAndPlanet1Cell") as DataTemplate;
+                        break;
+                    case CellType.PlayerAndPlanet2:
+                        result = element.FindResource("PlayerAndPlanet2Cell") as DataTemplate;
                         break;
                 }
             }     

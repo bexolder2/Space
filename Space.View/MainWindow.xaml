@@ -40,8 +40,20 @@
             <Button Height="80"
                     Width="80">
                 <Button.Background>
-                    <ImageBrush ImageSource="Images/station.png"/>
+                    <ImageBrush ImageSource="Images/station2.png"/>
                 </Button.Background>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="1"
+                               Text="Station"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                </Grid>
             </Button>
         </DataTemplate>
 
@@ -50,6 +62,51 @@
                     Width="80">
                 <Button.Background>
                     <ImageBrush ImageSource="Images/asteroid.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayerCell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/ship.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayerAndAsteroidCell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/player-asteroid.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayerAndPlanet1Cell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/player-planet1.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayerAndPlanet2Cell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/player-planet2.png"/>
+                </Button.Background>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlayerAndStationCell">
+            <Button Height="80"
+                    Width="80">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/player-station.png"/>
                 </Button.Background>
             </Button>
         </DataTemplate>

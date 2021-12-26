@@ -84,7 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Generator.json" />
-    <None Include="Data\Repairer.json" />
+    <Content Include="Data\Repairer.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
