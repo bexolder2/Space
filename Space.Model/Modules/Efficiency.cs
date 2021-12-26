@@ -6,7 +6,6 @@ namespace Space.Model.Modules
     {
         private int power;
         private int value;
-        private ResourceType resourceType;
 
         #region properties
         public int Power
@@ -19,12 +18,6 @@ namespace Space.Model.Modules
         {
             get => value;
             set => Set(ref this.value, value);
-        }
-
-        public ResourceType ResourceType
-        {
-            get => resourceType;
-            set => Set(ref resourceType, value);
         }
         #endregion
     }

@@ -24,8 +24,8 @@ namespace Space.Infrastructure.Deserializer
             result.Engine = DeserializeModule<Engine>(Constants.BasePath + Constants.EngineDataPath);
             result.Gun = DeserializeModule<Gun>(Constants.BasePath + Constants.GunDataPath);
             result.Storage = DeserializeModule<Storage>(Constants.BasePath + Constants.StorageDataPath);
-            //result.Generator = DeserializeModule<Generator>(Constants.BasePath + Constants.GeneratorDataPath);
-            //result.Repairer = DeserializeModule<Repairer>(Constants.BasePath + Constants.RepairerDataPath);
+            result.Generator = DeserializeModule<Generator>(Constants.BasePath + Constants.GeneratorDataPath);
+            result.Repairer = DeserializeModule<Repairer>(Constants.BasePath + Constants.RepairerDataPath);
 
             return result;
         }

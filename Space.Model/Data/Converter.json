@@ -6,8 +6,7 @@
 			"Level" : "0",
 			"Efficiency" : {
 				"Power" : "1",
-				"Value" : "5",
-				"ResourceType" : "Ore"
+				"Value" : "5"
 			}
 		},
 		{
@@ -16,8 +15,7 @@
 			"Level" : "1",
 			"Efficiency" : {
 				"Power" : "1",
-				"Value" : "4",
-				"ResourceType" : "Ore"
+				"Value" : "4"
 			}
 		},
 		{
@@ -26,8 +24,7 @@
 			"Level" : "2",
 			"Efficiency" : {
 				"Power" : "1",
-				"Value" : "3",
-				"ResourceType" : "Ore"
+				"Value" : "3"
 			}
 		}
 	]

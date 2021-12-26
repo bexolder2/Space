@@ -1,0 +1,32 @@
+{
+	"Repairer" : [
+		{
+			"Price": "350",
+			"HP" : "10",
+			"Level" : "0",
+			"Efficiency" : {
+				"Power" : "0",
+				"Value" : "20"
+			}
+		},
+		{
+			"Price": "438",
+			"HP" : "15",
+			"Level" : "1",
+			"Efficiency" : {
+				"Power" : "0",
+				"Value" : "25"
+			}
+		},
+		{
+			"Price": "547",
+			"HP" : "0",
+			"Level" : "2",
+			"Efficiency" : {
+				"Power" : "0",
+				"Value" : "30"
+			}
+		}
+	]
+
+}

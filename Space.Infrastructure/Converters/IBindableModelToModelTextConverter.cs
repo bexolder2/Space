@@ -47,7 +47,11 @@ namespace Space.Infrastructure.Converters
                 case Module.Converter:
                     {
                         var converter = (Converter)model.Key;
-                        //TODO: conv data
+                        result.Append("\nEfficiency: ");
+                        result.Append(converter.Efficiency.Power);
+                        result.Append(" MWt per ");
+                        result.Append(converter.Efficiency.Value);
+                        result.Append(" ore");
                     }
                     break;
                 case Module.Engine:
@@ -62,7 +66,11 @@ namespace Space.Infrastructure.Converters
                 case Module.Generator:
                     {
                         var generator = (Generator)model.Key;
-                        //TODO: generator data
+                        result.Append("\nEfficiency: ");
+                        result.Append(generator.Efficiency.Power);
+                        result.Append(" MWt per ");
+                        result.Append(generator.Efficiency.Value);
+                        result.Append(" km");
                     }
                     break;
                 case Module.Gun:
@@ -75,7 +83,9 @@ namespace Space.Infrastructure.Converters
                 case Module.Repairer:
                     {
                         var repairer = (Repairer)model.Key;
-                        //TODO: repairer data
+                        result.Append("\nEfficiency: ");
+                        result.Append(repairer.Efficiency.Value);
+                        result.Append(" hp");
                     }
                     break;
                 case Module.Storage:

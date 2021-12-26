@@ -125,8 +125,8 @@ namespace Space.ViewModel
             FillModules(result.Engine, Module.Engine);
             FillModules(result.Generator, Module.Generator);
             FillModules(result.Gun, Module.Gun);
-            //FillModules(result.Repairer, Module.Repairer);
-            //FillModules(result.Storage, Module.Storage);
+            FillModules(result.Repairer, Module.Repairer);
+            FillModules(result.Storage, Module.Storage);
         }
 
         private void FillModules<T>(List<T> module, Module moduleType) where T : IBindableModel 
