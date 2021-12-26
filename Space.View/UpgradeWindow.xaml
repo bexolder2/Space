@@ -6,7 +6,6 @@
         xmlns:customControls="clr-namespace:Space.View.CustomControls"
         xmlns:selector="clr-namespace:Space.View.Selector"
         xmlns:proxy="clr-namespace:Space.Helpers.Proxy;assembly=Space.Helpers"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="UpgradeWindow" 
         Height="450" 
@@ -313,6 +312,13 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Grid.ContextMenu>
+                
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -359,19 +365,18 @@
                   Grid.Row="1"
                   Grid.RowSpan="3"
                   Margin="10"
-                  ItemsSource="{Binding PlayersShipModules}"
+                  ItemsSource="{Binding PlayersShipModules, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemTemplateSelector="{StaticResource ModuleSelector}"
-                  SelectedIndex="{Binding NewSelectedModuleIndex, Mode=OneWayToSource}">
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding NewPositionClickCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-
+                  SelectedIndex="{Binding SelectedModuleIndex, Mode=TwoWay}">
             <ListView.Background>
                 <ImageBrush ImageSource="Images/bg_space.jpg"/>
             </ListView.Background>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnItemDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -460,6 +465,7 @@
                     Height="20"
                     Width="100"
                     Margin="10,0,20,0"
+                    Click="CloseClick"
                     Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>

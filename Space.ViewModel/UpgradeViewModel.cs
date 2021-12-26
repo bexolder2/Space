@@ -25,7 +25,8 @@ namespace Space.ViewModel
 
         private List<KeyValuePair<IBindableModel, Module>> playersShipModules;
         private List<Body> bodies;
-        private int newSelectedModuleIndex;
+        private int selectedModuleIndex;
+        private int startIndex, finishIndex;
         private IBindableModelToModelTextConverter modelConverter = new IBindableModelToModelTextConverter();
 
         public UpgradeViewModel()
@@ -59,10 +60,10 @@ namespace Space.ViewModel
             set => Set(ref bodies, value);
         }
 
-        public int NewSelectedModuleIndex
+        public int SelectedModuleIndex
         {
-            get => newSelectedModuleIndex;
-            set => Set(ref newSelectedModuleIndex, value);
+            get => selectedModuleIndex;
+            set => Set(ref selectedModuleIndex, value);
         }
 
         public List<KeyValuePair<IBindableModel, Module>> PlayersShipModules
@@ -385,13 +386,29 @@ namespace Space.ViewModel
         }
         private void OnMoveCommandExecuted(object p)
         {
-            MessageBox.Show($"current = {NewSelectedModuleIndex}");
+            startIndex = selectedModuleIndex;
         }
 
         private bool CanNewPositionClickCommandExecute(object p) => true;
         private void OnNewPositionClickCommandExecuted(object index)
         {
-            MessageBox.Show($"index = {index}");
+            if(index != null && index is int)
+            {
+                finishIndex = (int)index;
+
+                if(startIndex > 0 && finishIndex > 0)
+                {
+                    SwapItems(startIndex, finishIndex);
+                    startIndex = finishIndex = -1;
+                }
+            }
+        }
+
+        private void SwapItems(int index1, int index2)
+        {
+            var firstItem = PlayersShipModules[index1];
+            PlayersShipModules[index1] = PlayersShipModules[index2];
+            PlayersShipModules[index2] = firstItem;
         }
     }
 }
