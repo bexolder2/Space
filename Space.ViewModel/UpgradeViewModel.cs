@@ -4,6 +4,7 @@ using Space.Infrastructure.Deserializer;
 using Space.Model.BindableBase;
 using Space.Model.Constants;
 using Space.Model.Enums;
+using Space.Model.Modules;
 using Space.ViewModel.Command;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Space.ViewModel
 
         private Dictionary<Dictionary<IBindableModel, Module>, int> ship;
         private List<KeyValuePair<IBindableModel, Module>> playersShipModules;
+        private int newSelectedModuleIndex;
         private IBindableModelToModelTextConverter modelConverter = new IBindableModelToModelTextConverter();
 
         public UpgradeViewModel()
@@ -29,6 +31,8 @@ namespace Space.ViewModel
             #region command initialization
             UpgradeCommand = new RelayCommand(OnUpgradeCommandExecuted, CanUpgradeCommandExecute);
             CancelCommand = new RelayCommand(OnCancelCommandExecuted, CanCancelCommandExecute);
+            MoveCommand = new RelayCommand(OnMoveCommandExecuted, CanMoveCommandExecute);
+            NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
             #endregion
 
             modules = new Dictionary<IBindableModel, Module>();
@@ -42,9 +46,17 @@ namespace Space.ViewModel
         #region commands
         public ICommand UpgradeCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
+        public ICommand MoveCommand { get; private set; }
+        public ICommand NewPositionClickCommand { get; private set; }
         #endregion
 
         #region properties
+        public int NewSelectedModuleIndex
+        {
+            get => newSelectedModuleIndex;
+            set => Set(ref newSelectedModuleIndex, value);
+        }
+
         public List<KeyValuePair<IBindableModel, Module>> PlayersShipModules
         {
             get => playersShipModules;
@@ -250,6 +262,72 @@ namespace Space.ViewModel
             return result;
         }
         #endregion
+
+        private bool ValidationByPrice()
+        {
+            bool result = false;
+
+            double budget = (double)(Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Resources?.CryptocurrencyValue;
+            if (budget - ((BaseModel)(SelectedLevel.Key)).Price >= 0)
+                result = true;
+
+            return result;
+        }
+
+        #region validation location
+        private bool CheckModulesCompatibility(Module module1, Module module2)
+        {
+            return Constants.ModulesLocationValidator[(int)module1][(int)module2];
+        }
+
+        private bool ValidateLocation(int index)
+        {
+            bool result = true;
+            List<bool> compatibilities = new List<bool>();
+
+            if (PlayersShipModules.Count >= index)
+            {
+                if(PlayersShipModules.Count >= index + 1)
+                {
+                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
+                                        PlayersShipModules[index + 1].Value));
+                }
+                if (PlayersShipModules.Count >= index - 1)
+                {
+                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
+                                        PlayersShipModules[index - 1].Value));
+                }
+                if (PlayersShipModules.Count >= index + Constants.NumberOfModulesInOneBody)
+                {
+                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
+                                        PlayersShipModules[index + Constants.NumberOfModulesInOneBody].Value));
+                }
+                if (PlayersShipModules.Count >= index - Constants.NumberOfModulesInOneBody)
+                {
+                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
+                                        PlayersShipModules[index - Constants.NumberOfModulesInOneBody].Value));
+                }
+            }
+
+            foreach(var item in compatibilities)
+            {
+                result = result && item;
+            }
+
+            return result;
+        }
+        #endregion
+
+        private bool ValidateHP()
+        {
+            bool result = false;
+
+            int currentHP = (int)(Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.HP;
+            if (currentHP + ((BaseModel)SelectedLevel.Key).HP > 0)
+                result = true;
+
+            return result;
+        }
         #endregion
 
         private bool CanUpgradeCommandExecute(object p)
@@ -267,6 +345,23 @@ namespace Space.ViewModel
         {
 
 
+        }
+
+        private bool CanMoveCommandExecute(object p)
+        {
+            if (PlayersShipModules.Count > 0)
+                return true;
+            else return false;
+        }
+        private void OnMoveCommandExecuted(object p)
+        {
+            MessageBox.Show($"current = {NewSelectedModuleIndex}");
+        }
+
+        private bool CanNewPositionClickCommandExecute(object p) => true;
+        private void OnNewPositionClickCommandExecuted(object index)
+        {
+            MessageBox.Show($"index = {index}");
         }
     }
 }

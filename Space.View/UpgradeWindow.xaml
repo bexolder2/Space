@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:customControls="clr-namespace:Space.View.CustomControls"
         xmlns:selector="clr-namespace:Space.View.Selector"
+        xmlns:proxy="clr-namespace:Space.Helpers.Proxy;assembly=Space.Helpers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="UpgradeWindow" 
         Height="450" 
@@ -12,13 +14,22 @@
         DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}">
 
     <Window.Resources>
+        <proxy:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        
         <DataTemplate x:Key="CommandCenter">
             <Grid Height="80"
                   Width="80">
                 <Grid.Background>
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
-                <Image Source="Images/command_center.png"/>
+                <Image Source="Images/command_center.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -39,8 +50,15 @@
                 <Grid.Background>
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
-         
-                <Image Source="Images/body.png"/>
+
+                <Image Source="Images/body.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -62,7 +80,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/engine.png"/>
+                <Image Source="Images/engine.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -84,7 +109,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/battery.png"/>
+                <Image Source="Images/battery.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -106,7 +138,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/storage.png"/>
+                <Image Source="Images/storage.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -127,7 +166,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/gun.png"/>
+                <Image Source="Images/gun.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -149,7 +195,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/collector.png"/>
+                <Image Source="Images/collector.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -171,7 +224,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/converter.png"/>
+                <Image Source="Images/converter.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -193,7 +253,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/generator.png"/>
+                <Image Source="Images/generator.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -215,7 +282,14 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.3"/>
                 </Grid.Background>
 
-                <Image Source="Images/repairer.png"/>
+                <Image Source="Images/repairer.png">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move"
+                                      Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
                 <ProgressBar Minimum="0" 
                              Maximum="3"
                              Height="10"
@@ -258,11 +332,20 @@
                                       Ore="{Binding MainViewModel.Player.Resources.OreValue, 
                                             Source={StaticResource Locator}}"/>
 
-        <ListView Grid.Row="1"
+        <ListView x:Name="ship"
+                  Grid.Row="1"
                   Grid.RowSpan="3"
                   Margin="10"
                   ItemsSource="{Binding PlayersShipModules}"
-                  ItemTemplateSelector="{StaticResource ModuleSelector}">
+                  ItemTemplateSelector="{StaticResource ModuleSelector}"
+                  SelectedIndex="{Binding NewSelectedModuleIndex, Mode=OneWayToSource}">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding NewPositionClickCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
             <ListView.Background>
                 <ImageBrush ImageSource="Images/bg_space.jpg"/>
             </ListView.Background>

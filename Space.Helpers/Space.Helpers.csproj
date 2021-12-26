@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoordinateGenerator.cs" />
+    <Compile Include="Proxy\BindingProxy.cs" />
     <Compile Include="UnoccupiedPointsAnalyzer.cs" />
     <Compile Include="Interfaces\IBindableModel.cs" />
     <Compile Include="Interfaces\IGenerator.cs" />

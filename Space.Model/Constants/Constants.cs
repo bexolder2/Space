@@ -22,6 +22,8 @@ namespace Space.Model.Constants
         public static Dictionary<Module, int> MinimalShipConfiguration { get; private set; }
         public static int MaximumNumberOfCommandCenter = 1;
         public static int NumberOfModulesInOneBody = 4;
+        public static List<List<bool>> ModulesLocationValidator;
+
 
         static Constants()
         {
@@ -34,6 +36,20 @@ namespace Space.Model.Constants
             MinimalShipConfiguration.Add(Module.Converter, 1);
             MinimalShipConfiguration.Add(Module.Body, 2);
             MinimalShipConfiguration.Add(Module.Engine, 1);
+
+            ModulesLocationValidator = new List<List<bool>>
+            {
+                new List<bool> { true, true, false, true, false, false, true, true, true, true},
+                new List<bool> { true, true, true, true, true, true, true, true, true, true },
+                new List<bool> { false, true, true, true, true, false, false, false, true, true},
+                new List<bool> { true, true, true, true, false, true, true, true, true, true},
+                new List<bool> { false, true, true, false, true, true, true, true, true, true },
+                new List<bool> { false, true, false, true, true, true, false, false, false, true },
+                new List<bool> { true, true, false, true, true, false, true, true, true, true },
+                new List<bool> { true, true, false, true, true, false, true, true, true, true },
+                new List<bool> { true, true, true, true, true, false, true, true, true, true },
+                new List<bool> { true, true, true, true, true, true, true, true, true, true }
+            };
         }
     }
 }
