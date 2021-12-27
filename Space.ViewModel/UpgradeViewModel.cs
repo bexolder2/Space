@@ -28,6 +28,7 @@ namespace Space.ViewModel
         private List<KeyValuePair<IBindableModel, Module>> bodies;
         private int selectedModuleIndex;
         private int startIndex, finishIndex;
+        private EmptyBody lastEmptyBody;
         private IBindableModelToModelTextConverter modelConverter = new IBindableModelToModelTextConverter();
 
         public UpgradeViewModel()
@@ -543,6 +544,7 @@ namespace Space.ViewModel
         }
         #endregion
 
+        #region buy
         private bool CanBuyCommandExecute(object p) => true;
         private void OnBuyCommandExecuted(object p)
         {
@@ -584,6 +586,7 @@ namespace Space.ViewModel
             }
             MessageBox.Show($"Модуль {module.Value} куплен");
         }
+        #endregion
 
         public void LocateCommand()
         {
@@ -624,9 +627,22 @@ namespace Space.ViewModel
                 }
                 if (index > 0)
                 {
+                    lastEmptyBody = (EmptyBody)PlayersShipModules[index + 1].Key;
                     PlayersShipModules[index + 1] = selectedLevel;
                     buyBuffer.Add(selectedLevel);
                 }
+            }
+        }
+
+        public void CancelLocate()
+        {
+            if (buyBuffer.Count > 0 && lastEmptyBody != null)
+            {
+                int index = PlayersShipModules.IndexOf(buyBuffer.Last());
+                PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(lastEmptyBody, Module.EmptyBody));
+                PlayersShipModules.Remove(buyBuffer.Last());
+                buyBuffer.Remove(buyBuffer.Last());
+                lastEmptyBody = null;
             }
         }
     }

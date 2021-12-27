@@ -60,5 +60,11 @@ namespace Space.View
             (DataContext as UpgradeViewModel).LocateCommand();
             ship.Items.Refresh();
         }
+
+        private void CancelLocateClick(object sender, RoutedEventArgs e)
+        {
+            (DataContext as UpgradeViewModel).CancelLocate();
+            ship.Items.Refresh();
+        }
     }
 }
