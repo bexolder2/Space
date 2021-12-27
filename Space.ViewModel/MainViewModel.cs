@@ -127,20 +127,21 @@ namespace Space.ViewModel
 
             #region test data
             Player.Spaceship.ShipModules = new List<KeyValuePair<IBindableModel, Module>>();
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new CommandCenter { Level = Level.First }, Module.CommandCenter));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Battery { Level = Level.Second }, Module.Battery));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Storage { Level = Level.Third }, Module.Storage));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Gun { Level = Level.First }, Module.Gun));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Collector { Level = Level.Second }, Module.Collector));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Converter { Level = Level.Third }, Module.Converter));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { Level = Level.Second }, Module.Body));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { Level = Level.Second }, Module.Body));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { Level = Level.Third }, Module.Engine));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { Level = Level.Third }, Module.Engine));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { Level = Level.First }, Module.Repairer));
-            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { Level = Level.Third }, Module.Repairer));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new CommandCenter { BodyLimit = 4, HP = 10, Level = Level.First }, Module.CommandCenter));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Battery { HP = 10, Level = Level.Second }, Module.Battery));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Storage { HP = 10, Level = Level.Third }, Module.Storage));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Gun { HP = -5, Level = Level.First }, Module.Gun));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Collector { HP = 10, Level = Level.Second }, Module.Collector));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Converter { HP = -5, Level = Level.Third }, Module.Converter));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { HP = -10, Level = Level.Third }, Module.Engine));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Engine { HP = -10, Level = Level.Third }, Module.Engine));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { HP = 10, Level = Level.First }, Module.Repairer));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Repairer { HP = 10, Level = Level.Third }, Module.Repairer));
             Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.Third }, Module.EmptyBody));
             Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.Third }, Module.EmptyBody));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.Second }, Module.Body));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.Second }, Module.Body));
+            Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.Second }, Module.Body));
             #endregion
         }
 
