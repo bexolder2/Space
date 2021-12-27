@@ -39,16 +39,17 @@ namespace Space.Model.Constants
 
             ModulesLocationValidator = new List<List<bool>>
             {
-                new List<bool> { true, true, false, true, false, false, true, true, true, true},
-                new List<bool> { true, true, true, true, true, true, true, true, true, true },
-                new List<bool> { false, true, true, true, true, false, false, false, true, true},
-                new List<bool> { true, true, true, true, false, true, true, true, true, true},
-                new List<bool> { false, true, true, false, true, true, true, true, true, true },
-                new List<bool> { false, true, false, true, true, true, false, false, false, true },
-                new List<bool> { true, true, false, true, true, false, true, true, true, true },
-                new List<bool> { true, true, false, true, true, false, true, true, true, true },
-                new List<bool> { true, true, true, true, true, false, true, true, true, true },
-                new List<bool> { true, true, true, true, true, true, true, true, true, true }
+                new List<bool> { true, true, false, true, false, false, true, true, true, true, true },
+                new List<bool> { true, true, true, true, true, true, true, true, true, true, true },
+                new List<bool> { false, true, true, true, true, false, false, false, true, true, true },
+                new List<bool> { true, true, true, true, false, true, true, true, true, true, true },
+                new List<bool> { false, true, true, false, true, true, true, true, true, true, true },
+                new List<bool> { false, true, false, true, true, true, false, false, false, true, true },
+                new List<bool> { true, true, false, true, true, false, true, true, true, true, true },
+                new List<bool> { true, true, false, true, true, false, true, true, true, true, true },
+                new List<bool> { true, true, true, true, true, false, true, true, true, true, true },
+                new List<bool> { true, true, true, true, true, true, true, true, true, true, true },
+                new List<bool> { true, true, true, true, true, true, true, true, true, true, true }
             };
         }
     }

@@ -24,7 +24,8 @@ namespace Space.ViewModel
         private string additionalSelectedLevelData;
 
         private List<KeyValuePair<IBindableModel, Module>> playersShipModules;
-        private List<Body> bodies;
+        private List<KeyValuePair<IBindableModel, Module>> buyBuffer;
+        private List<KeyValuePair<IBindableModel, Module>> bodies;
         private int selectedModuleIndex;
         private int startIndex, finishIndex;
         private IBindableModelToModelTextConverter modelConverter = new IBindableModelToModelTextConverter();
@@ -36,10 +37,13 @@ namespace Space.ViewModel
             CancelCommand = new RelayCommand(OnCancelCommandExecuted, CanCancelCommandExecute);
             MoveCommand = new RelayCommand(OnMoveCommandExecuted, CanMoveCommandExecute);
             NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
+            BuyCommand = new RelayCommand(OnBuyCommandExecuted, CanBuyCommandExecute);
             #endregion
 
             modules = new Dictionary<IBindableModel, Module>();
             PlayersShipModules = new List<KeyValuePair<IBindableModel, Module>>();
+            IsFirstLaunch = true;
+            buyBuffer = new List<KeyValuePair<IBindableModel, Module>>();
 
             Initialize();
             InitializeSelectedModules();
@@ -51,10 +55,13 @@ namespace Space.ViewModel
         public ICommand CancelCommand { get; private set; }
         public ICommand MoveCommand { get; private set; }
         public ICommand NewPositionClickCommand { get; private set; }
+        public ICommand BuyCommand { get; private set; }
         #endregion
 
         #region properties
-        public List<Body> Bodies
+        public bool IsFirstLaunch { get; set; }
+
+        public List<KeyValuePair<IBindableModel, Module>> Bodies
         {
             get => bodies;
             set => Set(ref bodies, value);
@@ -146,28 +153,23 @@ namespace Space.ViewModel
                                      .ToDictionary(_key => _key.Key, _value => _value.Value);
         }
 
-        private void InitializeShip()
+        public void InitializeShip()
         {
             PlayersShipModules = new List<KeyValuePair<IBindableModel, Module>>();
             PlayersShipModules = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.ShipModules;
-            Bodies = new List<Body>();
+            Bodies = new List<KeyValuePair<IBindableModel, Module>>();
 
             foreach(var item in PlayersShipModules)
             {
                 if(item.Value is Module.Body)
                 {
-                    Bodies.Add((Body)item.Key);
-                    Bodies.LastOrDefault().Index = PlayersShipModules.IndexOf(item);
+                    Bodies.Add(item);
                 }
             }
 
             for (int i = 0; i < Bodies.Count; i++)
             {
-                if (i > 0)
-                {
-                    PlayersShipModules.RemoveAt(Bodies[i].Index - 1);
-                }
-                else PlayersShipModules.RemoveAt(Bodies[i].Index);
+                PlayersShipModules.Remove(Bodies[i]);
             }
         }
         #endregion
@@ -232,10 +234,10 @@ namespace Space.ViewModel
         {
             bool result = false;
             Dictionary<Module, int> shipModules = GetShipModules();
-            int bodies = shipModules.FirstOrDefault(x => x.Key == Module.Body).Value;
+            int bodies = Bodies.Count;
             int engines = shipModules.FirstOrDefault(x => x.Key == Module.Engine).Value;
 
-            if (bodies / 2 == engines)
+            if ((bodies / 2 + bodies % 2) >= engines)
                 result = true;
 
             return result;
@@ -245,9 +247,12 @@ namespace Space.ViewModel
         {
             bool result = false;
             Dictionary<Module, int> shipModules = GetShipModules();
-            int bodies = shipModules.FirstOrDefault(x => x.Key == Module.Body).Value;
+            int bodies = Bodies.Count;
 
-            if (bodies * 4 >= CalculateTotalNumbersOfModules())
+            if (bodies * 4 >= CalculateTotalNumbersOfModules() && 
+                ((CommandCenter)PlayersShipModules
+                .FirstOrDefault(x => x.Value == Module.CommandCenter).Key)
+                .BodyLimit >= bodies)
                 result = true;
 
             return result;
@@ -290,27 +295,58 @@ namespace Space.ViewModel
             bool result = true;
             List<bool> compatibilities = new List<bool>();
 
-            if (PlayersShipModules.Count >= index)
+            if (PlayersShipModules.Count > index)
             {
-                if(PlayersShipModules.Count >= index + 1)
+                if (index == 0)
                 {
-                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
-                                        PlayersShipModules[index + 1].Value));
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationPlusFour(index));
                 }
-                if (PlayersShipModules.Count >= index - 1)
+                else if (index == PlayersShipModules.Count - 1)
                 {
-                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
-                                        PlayersShipModules[index - 1].Value));
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationMinusFour(index));
                 }
-                if (PlayersShipModules.Count >= index + Constants.NumberOfModulesInOneBody)
+                else if (index == 3)
                 {
-                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
-                                        PlayersShipModules[index + Constants.NumberOfModulesInOneBody].Value));
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationPlusFour(index));
                 }
-                if (PlayersShipModules.Count >= index - Constants.NumberOfModulesInOneBody)
+                else if (index == PlayersShipModules.Count - Constants.NumberOfModulesInOneBody)
                 {
-                    compatibilities.Add(CheckModulesCompatibility(PlayersShipModules[index].Value, 
-                                        PlayersShipModules[index - Constants.NumberOfModulesInOneBody].Value));
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationMinusFour(index));
+                }
+                else if (index % 4 == 0) //left line
+                {
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationMinusFour(index));
+                    compatibilities.Add(LocationPlusFour(index));
+                }
+                else if (index < Constants.NumberOfModulesInOneBody) //up
+                {
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationPlusFour(index));
+                }
+                else if (index % Constants.NumberOfModulesInOneBody == 3) //right
+                {
+                    compatibilities.Add(LocationMinusFour(index));
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationPlusFour(index));
+                }
+                else if (index > PlayersShipModules.Count - Constants.NumberOfModulesInOneBody) //down
+                {
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationMinusFour(index));
+                }
+                else
+                {
+                    compatibilities.Add(LocationPlusOne(index));
+                    compatibilities.Add(LocationMinusOne(index));
+                    compatibilities.Add(LocationPlusFour(index));
+                    compatibilities.Add(LocationMinusFour(index));
                 }
             }
 
@@ -321,15 +357,77 @@ namespace Space.ViewModel
 
             return result;
         }
+
+        private bool LocationMinusOne(int index)
+        {
+            return CheckModulesCompatibility(PlayersShipModules[index].Value,
+                                             PlayersShipModules[index - 1].Value);
+        }
+
+        private bool LocationPlusOne(int index)
+        {
+            return CheckModulesCompatibility(PlayersShipModules[index].Value,
+                                             PlayersShipModules[index + 1].Value);
+        }
+
+        private bool LocationMinusFour(int index)
+        {
+            return CheckModulesCompatibility(PlayersShipModules[index].Value,
+                                             PlayersShipModules[index - Constants.NumberOfModulesInOneBody].Value);
+        }
+
+        private bool LocationPlusFour(int index)
+        {
+            return CheckModulesCompatibility(PlayersShipModules[index].Value,
+                                             PlayersShipModules[index + Constants.NumberOfModulesInOneBody].Value);
+        }
         #endregion
 
         private bool ValidateHP()
         {
             bool result = false;
 
-            int currentHP = (int)(Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.HP;
-            if (currentHP + ((BaseModel)SelectedLevel.Key).HP > 0)
+            int hp = 0;
+            foreach(var module in PlayersShipModules)
+            {
+                hp += ((BaseModel)module.Key).HP;
+            }
+            foreach(var body in Bodies)
+            {
+                hp += ((Body)body.Key).HP;
+            }
+            
+            if (hp > 0)
                 result = true;
+
+            return result;
+        }
+
+        private bool Validate()
+        {
+            bool result = false;
+            System.Diagnostics.Debug.WriteLine("Validate");
+            if (ValidateNumberOfCommandCenters())
+            {
+                if (ValidateNumberOfModules())
+                {
+                    if (ValidateHP())
+                    {
+                        if (ValidationByPrice())
+                        {
+                            if (ValidateNumberOfBodies())
+                            {
+                                result = true;
+                            }
+                            else MessageBox.Show("Слишком много модулей");
+                        }
+                        else MessageBox.Show("Недостаточно средств для покупки модуля");
+                    }
+                    else MessageBox.Show("Отрицательная сумма брони");
+                }
+                else MessageBox.Show("Некорректное колличество командных центров/двигателей");
+            }
+            else MessageBox.Show("На корабле может быть только один командный центр");
 
             return result;
         }
@@ -345,25 +443,56 @@ namespace Space.ViewModel
             {
                 var newModule = (KeyValuePair<IBindableModel, Module>)selectedItem;
 
-                if(newModule.Value is Module.Body)
+                if (ValidateNumberOfCommandCenters())
                 {
-                    Bodies.Add(new Body
-                               {
-                                   HP = ((Body)newModule.Key).HP,
-                                   Level = ((Body)newModule.Key).Level,
-                                   Index = PlayersShipModules.Count
-                               });
-
-                    for (int i = 0; i < Constants.NumberOfModulesInOneBody; i++)
+                    if (ValidateNumberOfModules())
                     {
-                        PlayersShipModules.Add(new KeyValuePair<IBindableModel, Module>(
-                            new EmptyBody
+                        if (ValidateNumberOfEngines())
+                        {
+                            if (ValidateHP())
                             {
-                                HP = ((Body)newModule.Key).HP,
-                                Level = ((Body)newModule.Key).Level
-                            }, Module.EmptyBody));
-                    }        
+                                if (ValidationByPrice())
+                                {
+                                    if (ValidateLocation(0))
+                                    {
+                                        if (newModule.Value is Module.Body)
+                                        {
+                                            Bodies.Add(new KeyValuePair<IBindableModel, Module>(new Body
+                                            {
+                                                HP = ((Body)newModule.Key).HP,
+                                                Level = ((Body)newModule.Key).Level
+                                            }, Module.Body));
+
+                                            for (int i = 0; i < Constants.NumberOfModulesInOneBody; i++)
+                                            {
+                                                PlayersShipModules.Add(new KeyValuePair<IBindableModel, Module>(
+                                                    new EmptyBody
+                                                    {
+                                                        HP = ((Body)newModule.Key).HP,
+                                                        Level = ((Body)newModule.Key).Level
+                                                    }, Module.EmptyBody));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (ValidateNumberOfBodies())
+                                            {
+
+                                            }
+                                            else MessageBox.Show("Слишком много модулей данного типа");
+                                        }
+                                    }
+                                    else MessageBox.Show("Недопустимое расположение");
+                                }
+                                else MessageBox.Show("Недостаточно средств для покупки модуля");
+                            }
+                            else MessageBox.Show("Отрицательное сумма брони");
+                        }
+                        else MessageBox.Show("Некорректное колличество двигателей");
+                    }
+                    else MessageBox.Show("Слишком много модулей, нужен еще один корпус");
                 }
+                else MessageBox.Show("На корабле может быть только один командный центр");
             }
         }
 
@@ -372,10 +501,11 @@ namespace Space.ViewModel
         {
             foreach(var item in Bodies)
             {
-                PlayersShipModules.Insert(item.Index, new KeyValuePair<IBindableModel, Module>(item, Module.Body));
+                PlayersShipModules.Add(item);
             }
+            var result = PlayersShipModules.Except(buyBuffer).ToList();
 
-            Messenger.Default.Send(PlayersShipModules);
+            Messenger.Default.Send(result);
         }
 
         private bool CanMoveCommandExecute(object p)
@@ -389,6 +519,7 @@ namespace Space.ViewModel
             startIndex = selectedModuleIndex;
         }
 
+        #region modules moving
         private bool CanNewPositionClickCommandExecute(object p) => true;
         private void OnNewPositionClickCommandExecuted(object index)
         {
@@ -396,7 +527,7 @@ namespace Space.ViewModel
             {
                 finishIndex = (int)index;
 
-                if(startIndex > 0 && finishIndex > 0)
+                if(startIndex >= 0 && finishIndex >= 0)
                 {
                     SwapItems(startIndex, finishIndex);
                     startIndex = finishIndex = -1;
@@ -409,6 +540,94 @@ namespace Space.ViewModel
             var firstItem = PlayersShipModules[index1];
             PlayersShipModules[index1] = PlayersShipModules[index2];
             PlayersShipModules[index2] = firstItem;
+        }
+        #endregion
+
+        private bool CanBuyCommandExecute(object p) => true;
+        private void OnBuyCommandExecuted(object p)
+        {
+            var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
+
+            foreach (var module in buyBuffer)
+            {
+                if (Validate())
+                {
+                    if(module.Value == Module.Body)
+                    {
+                        Buy(player, module);
+                    }
+                    else
+                    {
+                        if (ValidateLocation(PlayersShipModules.IndexOf(module)))
+                        {
+                            Buy(player, module);
+                        }
+                        else MessageBox.Show("Недопустимое расположение");
+                    }                  
+                }
+            }
+        }
+
+        private void Buy(Player player, KeyValuePair<IBindableModel, Module> module)
+        {
+            if (((BaseModel)module.Key).Level == Level.First)
+            {
+                player.Resources.CryptocurrencyValue -= ((BaseModel)module.Key).Price;
+                Bodies.Clear();
+            }
+            else
+            {
+                var currentlySelectedModule = Modules.Where(item => item.Value == module.Value)
+                                                     .ToDictionary(_key => _key.Key, _value => _value.Value);
+                player.Resources.CryptocurrencyValue -= ((BaseModel)currentlySelectedModule.FirstOrDefault().Key).Price;
+                Bodies.Clear();
+            }
+            MessageBox.Show($"Модуль {module.Value} куплен");
+        }
+
+        public void LocateCommand()
+        {
+            if (selectedLevel.Value is Module.Body)
+            {
+                Bodies.Add(new KeyValuePair<IBindableModel, Module>(new Body
+                {
+                    HP = ((Body)selectedLevel.Key).HP,
+                    Level = ((Body)selectedLevel.Key).Level
+                }, Module.Body));
+
+                for (int i = 0; i < Constants.NumberOfModulesInOneBody; i++)
+                {
+                    PlayersShipModules.Add(new KeyValuePair<IBindableModel, Module>(
+                        new EmptyBody
+                        {
+                            HP = ((Body)selectedLevel.Key).HP,
+                            Level = ((Body)selectedLevel.Key).Level
+                        }, Module.EmptyBody));
+                }
+
+                buyBuffer.Add(selectedLevel);
+            }
+            else
+            {
+                int counter = -1;
+                int index = -1;
+                foreach (var item in PlayersShipModules)
+                {
+                    if (item.Value != Module.EmptyBody)
+                    {
+                        counter++;
+                    }
+                    else
+                    {
+                        index = counter;
+                    }
+                }
+                if (index > 0)
+                {
+                    PlayersShipModules[index + 1] = selectedLevel;
+                    buyBuffer.Add(selectedLevel);
+                }
+            }
         }
     }
 }

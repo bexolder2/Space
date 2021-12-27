@@ -344,7 +344,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="410"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -456,14 +456,23 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     HorizontalAlignment="Right">
-            <Button Content="Upgrade" 
+            <Button Content="Locate" 
                     Height="20"
-                    Width="100"
-                    Command="{Binding UpgradeCommand}"
-                    CommandParameter="{Binding SelectedItem, ElementName=levels}"/>
+                    Width="60"
+                    Click="LocateClick"/>
+            <Button Content="Buy"
+                    Margin="10,0,0,0"
+                    Height="20"
+                    Width="60"
+                    Command="{Binding BuyCommand}"/>
+            <Button Content="Upgrade"
+                    Margin="10,0,0,0"
+                    Height="20"
+                    Width="60"
+                    Click="UpdateClick"/>
             <Button Content="Cancel" 
                     Height="20"
-                    Width="100"
+                    Width="60"
                     Margin="10,0,20,0"
                     Click="CloseClick"
                     Command="{Binding CancelCommand}"/>
