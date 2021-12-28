@@ -552,20 +552,48 @@ namespace Space.ViewModel
 
             foreach (var module in buyBuffer)
             {
-                if (Validate())
+                if (module.Value == Module.Body)
                 {
-                    if(module.Value == Module.Body)
+                    if (player.Spaceship.ShipModules.Count == 4)
                     {
-                        Buy(player, module);
+                        List<bool> tmp = new List<bool>();
+                        foreach (var item in player.Spaceship.ShipModules)
+                        {
+                            if (item.Value == Module.EmptyBody)
+                            {
+                                tmp.Add(true);
+                            }
+                            else tmp.Add(false);
+                        }
+                        bool emptyFlag = true;
+                        foreach (var item in tmp)
+                        {
+                            emptyFlag = emptyFlag && item;
+                        }
+
+                        if (emptyFlag)
+                        {
+                            Buy(player, module);
+                        }
                     }
                     else
+                    {
+                        if (Validate())
+                        {
+                            Buy(player, module);
+                        }
+                    }
+                }
+                else
+                {
+                    if (Validate())
                     {
                         if (ValidateLocation(PlayersShipModules.IndexOf(module)))
                         {
                             Buy(player, module);
                         }
                         else MessageBox.Show("Недопустимое расположение");
-                    }                  
+                    }
                 }
             }
             Messenger.Default.Send(true);
@@ -631,10 +659,14 @@ namespace Space.ViewModel
                     }
                     else
                     {
+                        if (counter == -1)
+                        {
+                            counter++;
+                        }
                         index = counter;
                     }
                 }
-                if (index > 0)
+                if (index >= 0)
                 {
                     lastEmptyBody = (EmptyBody)PlayersShipModules[index + 1].Key;
                     PlayersShipModules[index + 1] = selectedLevel;

@@ -24,22 +24,25 @@ namespace Space.Infrastructure.Helpers
                 }
             }
 
-            int maxEnginesDistance = 0;
-            int maxGeneratorsEnergy = 0;
-            foreach(var engine in engines)
+            if(engines.Count > 0 || generators.Count > 0)
             {
-                maxEnginesDistance += engine.EnergyConsymptionPer100Kilometers; 
-            }
-            foreach(var generator in generators)
-            {
-                maxGeneratorsEnergy += generator.Efficiency.Power;
-            }
+                int maxEnginesDistance = 0;
+                int maxGeneratorsEnergy = 0;
+                foreach (var engine in engines)
+                {
+                    maxEnginesDistance += engine.EnergyConsymptionPer100Kilometers;
+                }
+                foreach (var generator in generators)
+                {
+                    maxGeneratorsEnergy += generator.Efficiency.Power;
+                }
 
-            double powerValue = player.Resources.EnergyValue;
-            while (powerValue > 0)
-            {
-                powerValue = powerValue - maxEnginesDistance + maxGeneratorsEnergy;
-                result += 100;     
+                double powerValue = player.Resources.EnergyValue;
+                while (powerValue > 0)
+                {
+                    powerValue = powerValue - maxEnginesDistance + maxGeneratorsEnergy;
+                    result += 100;
+                }
             }
 
             return result;
