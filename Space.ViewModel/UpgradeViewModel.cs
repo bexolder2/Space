@@ -582,7 +582,15 @@ namespace Space.ViewModel
             {
                 var currentlySelectedModule = Modules.Where(item => item.Value == module.Value)
                                                      .ToDictionary(_key => _key.Key, _value => _value.Value);
-                player.Resources.CryptocurrencyValue -= ((BaseModel)currentlySelectedModule.FirstOrDefault().Key).Price;
+                int index1 = buyBuffer.IndexOf(module);
+                int index2 = PlayersShipModules.IndexOf(module);
+                buyBuffer.Remove(module);
+                PlayersShipModules.Remove(module);
+                var newModule = currentlySelectedModule.FirstOrDefault();
+                buyBuffer.Insert(index1, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
+                PlayersShipModules.Insert(index2, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
+
+                player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
                 Bodies.Clear();
             }
             MessageBox.Show($"Модуль {module.Value} куплен");
