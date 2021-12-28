@@ -568,6 +568,7 @@ namespace Space.ViewModel
                     }                  
                 }
             }
+            Messenger.Default.Send(true);
         }
 
         private void Buy(Player player, KeyValuePair<IBindableModel, Module> module)

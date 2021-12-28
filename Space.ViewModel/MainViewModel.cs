@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Space.Helpers;
 using Space.Helpers.Interfaces;
+using Space.Infrastructure.Helpers;
 using Space.Model.BindableBase;
 using Space.Model.Enums;
 using Space.Model.Modules;
@@ -35,6 +36,7 @@ namespace Space.ViewModel
             InitializeTestData();
 
             Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
+            Messenger.Default.Register<bool>(this, CalculateShipParams);
         }
 
         #region commands
@@ -201,6 +203,17 @@ namespace Space.ViewModel
         public void UpdateShipModules(List<KeyValuePair<IBindableModel, Module>> newModules)
         {
             Player.Spaceship.ShipModules = newModules;
+        }
+
+        public void CalculateShipParams(bool flag)
+        {
+            if (flag)
+            {
+                ShipPropertyCounter.CountAvailableDistance(ref player);
+                var spaceship = player.Spaceship;
+                ShipPropertyCounter.CountDamageValue(ref spaceship);
+                ShipPropertyCounter.CountHPValue(ref spaceship);
+            }
         }
 
         private List<Point> ConvertCellsToPoints()

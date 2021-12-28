@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -8,7 +9,7 @@ namespace Space.View.CustomControls
     {
         public TopButtonsPanel()
         {
-            InitializeComponent();
+            InitializeComponent();   
         }
 
         private void OpenUpgradeWnd(object sender, RoutedEventArgs e)
