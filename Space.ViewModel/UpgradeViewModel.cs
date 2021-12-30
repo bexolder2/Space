@@ -450,64 +450,81 @@ namespace Space.ViewModel
 
         private bool CanUpgradeCommandExecute(object p)
         {
-            return true;
-        }
-        private void OnUpgradeCommandExecuted(object selectedItem) //TODO: add buy logic and validation
-        { 
-            if (selectedItem != null)
+            bool result = false;
+            if (selectedModule.Key != null)
             {
-                var newModule = (KeyValuePair<IBindableModel, Module>)selectedItem;
-
-                if (ValidateNumberOfCommandCenters())
+                if (((BaseModel)PlayersShipModules[selectedModuleIndex].Key).Level != Level.Third)
                 {
-                    if (ValidateNumberOfModules())
-                    {
-                        if (ValidateNumberOfEngines())
-                        {
-                            if (ValidateHP())
-                            {
-                                if (ValidationByPrice(newModule))
-                                {
-                                    if (ValidateLocation(0))
-                                    {
-                                        if (newModule.Value is Module.Body)
-                                        {
-                                            Bodies.Add(new KeyValuePair<IBindableModel, Module>(new Body
-                                            {
-                                                HP = ((Body)newModule.Key).HP,
-                                                Level = ((Body)newModule.Key).Level
-                                            }, Module.Body));
-
-                                            for (int i = 0; i < Constants.NumberOfModulesInOneBody; i++)
-                                            {
-                                                PlayersShipModules.Add(new KeyValuePair<IBindableModel, Module>(
-                                                    new EmptyBody
-                                                    {
-                                                        HP = ((Body)newModule.Key).HP,
-                                                        Level = ((Body)newModule.Key).Level
-                                                    }, Module.EmptyBody));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (ValidateNumberOfBodies())
-                                            {
-
-                                            }
-                                            else MessageBox.Show("Слишком много модулей данного типа");
-                                        }
-                                    }
-                                    else MessageBox.Show("Недопустимое расположение");
-                                }
-                                else MessageBox.Show("Недостаточно средств для покупки модуля");
-                            }
-                            else MessageBox.Show("Отрицательное сумма брони");
-                        }
-                        else MessageBox.Show("Некорректное колличество двигателей");
-                    }
-                    else MessageBox.Show("Слишком много модулей, нужен еще один корпус");
+                    result = true;
                 }
-                else MessageBox.Show("На корабле может быть только один командный центр");
+            }
+            return result;
+        }
+        private void OnUpgradeCommandExecuted(object parameter)
+        {
+            var selected = PlayersShipModules[selectedModuleIndex];
+            if (selected.Key != null)
+            {
+                KeyValuePair<IBindableModel, Module> newModule = new KeyValuePair<IBindableModel, Module>();
+                KeyValuePair<IBindableModel, Module> body = new KeyValuePair<IBindableModel, Module>();
+
+                if (parameter.ToString() == "body")
+                {
+                    if(Bodies.Count > 0)
+                    {
+                        body = Bodies.First(x => ((BaseModel)x.Key).Level != Level.Third);
+                        if(body.Key != null)
+                        {
+                            switch (((BaseModel)body.Key).Level)
+                            {
+                                case Level.First:
+                                    newModule = Modules.FirstOrDefault(x => ((BaseModel)x.Key).Level == Level.Second && x.Value == body.Value);
+                                    break;
+                                case Level.Second:
+                                    newModule = Modules.FirstOrDefault(x => ((BaseModel)x.Key).Level == Level.Third && x.Value == body.Value);
+                                    break;
+                            }
+                        }
+                    }  
+                }
+                else
+                {
+                    switch (((BaseModel)selected.Key).Level)
+                    {
+                        case Level.First:
+                            newModule = Modules.FirstOrDefault(x => ((BaseModel)x.Key).Level == Level.Second && x.Value == selected.Value);
+                            break;
+                        case Level.Second:
+                            newModule = Modules.FirstOrDefault(x => ((BaseModel)x.Key).Level == Level.Third && x.Value == selected.Value);
+                            break;
+                    }
+                }   
+
+                if (ValidationByPrice(newModule))
+                {
+                    var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
+                    player.Resources.CryptocurrencyValue -= ((BaseModel)selected.Key).Price;
+
+                    if (parameter.ToString() == "body")
+                    {
+                        int index = Bodies.IndexOf(body);
+                        Bodies.RemoveAt(index);
+                        Bodies.Insert(index, newModule);
+                    }
+                    else
+                    {
+                        int index = PlayersShipModules.IndexOf(selected);
+                        PlayersShipModules.RemoveAt(index);
+                        PlayersShipModules.Insert(index, newModule);
+                    } 
+                    
+                    Messenger.Default.Send(true);
+                    MessageBox.Show($"Модуль {newModule.Value} улучшен");
+                }
+                else
+                {
+                    MessageBox.Show($"Недостаточно крипты для улучшения");
+                }
             }
         }
 
