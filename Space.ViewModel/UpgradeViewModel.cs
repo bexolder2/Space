@@ -156,9 +156,23 @@ namespace Space.ViewModel
 
         public void InitializeShip()
         {
+            var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
+            var spaceship = player?.Spaceship?.ShipModules;
             PlayersShipModules = new List<KeyValuePair<IBindableModel, Module>>();
-            PlayersShipModules = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Spaceship?.ShipModules;
             Bodies = new List<KeyValuePair<IBindableModel, Module>>();
+
+            if (spaceship == null || spaceship.Count == 0)
+            {
+                PlayersShipModules = Constants.BaseComplectation;
+                foreach(var item in PlayersShipModules)
+                {
+                    player.Resources.CryptocurrencyValue -= ((BaseModel)item.Key).Price;
+                }
+            }
+            else
+            {
+                PlayersShipModules = spaceship;
+            }     
 
             foreach(var item in PlayersShipModules)
             {
@@ -274,12 +288,12 @@ namespace Space.ViewModel
         }
         #endregion
 
-        private bool ValidationByPrice()
+        private bool ValidationByPrice(KeyValuePair<IBindableModel, Module> module)
         {
             bool result = false;
 
             double budget = (double)(Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player?.Resources?.CryptocurrencyValue;
-            if (budget - ((BaseModel)(SelectedLevel.Key)).Price >= 0)
+            if (budget - ((BaseModel)(module.Key)).Price >= 0)
                 result = true;
 
             return result;
@@ -404,7 +418,7 @@ namespace Space.ViewModel
             return result;
         }
 
-        private bool Validate()
+        private bool Validate(KeyValuePair<IBindableModel, Module> module)
         {
             bool result = false;
             System.Diagnostics.Debug.WriteLine("Validate");
@@ -414,7 +428,7 @@ namespace Space.ViewModel
                 {
                     if (ValidateHP())
                     {
-                        if (ValidationByPrice())
+                        if (ValidationByPrice(module))
                         {
                             if (ValidateNumberOfBodies())
                             {
@@ -452,7 +466,7 @@ namespace Space.ViewModel
                         {
                             if (ValidateHP())
                             {
-                                if (ValidationByPrice())
+                                if (ValidationByPrice(newModule))
                                 {
                                     if (ValidateLocation(0))
                                     {
@@ -578,7 +592,7 @@ namespace Space.ViewModel
                     }
                     else
                     {
-                        if (Validate())
+                        if (Validate(module))
                         {
                             Buy(player, module);
                         }
@@ -586,7 +600,7 @@ namespace Space.ViewModel
                 }
                 else
                 {
-                    if (Validate())
+                    if (Validate(module))
                     {
                         if (ValidateLocation(PlayersShipModules.IndexOf(module)))
                         {

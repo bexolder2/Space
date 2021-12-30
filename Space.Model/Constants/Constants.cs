@@ -1,4 +1,6 @@
-﻿using Space.Model.Enums;
+﻿using Space.Helpers.Interfaces;
+using Space.Model.Enums;
+using Space.Model.Modules;
 using System.Collections.Generic;
 using System.IO;
 
@@ -20,6 +22,7 @@ namespace Space.Model.Constants
         public const string RepairerDataPath = "\\Space\\Space.Model\\Data\\Repairer.json";
 
         public static Dictionary<Module, int> MinimalShipConfiguration { get; private set; }
+        public static List<KeyValuePair<IBindableModel, Module>> BaseComplectation { get; private set; }
         public static int MaximumNumberOfCommandCenter = 1;
         public static int NumberOfModulesInOneBody = 4;
         public static List<List<bool>> ModulesLocationValidator;
@@ -36,6 +39,19 @@ namespace Space.Model.Constants
             MinimalShipConfiguration.Add(Module.Converter, 1);
             MinimalShipConfiguration.Add(Module.Body, 2);
             MinimalShipConfiguration.Add(Module.Engine, 1);
+
+            BaseComplectation = new List<KeyValuePair<IBindableModel, Module>>();
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new CommandCenter { BodyLimit = 4, HP = 10, Level = Level.First, Price = 100}, Module.CommandCenter));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Battery { HP = 10, Level = Level.First, Price = 150, Limit = 1000000 }, Module.Battery));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Gun { HP = -5, Level = Level.First, Price = 150, Damage = 50 }, Module.Gun));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Storage { HP = 10, Level = Level.First, Price = 50, Limit = 2000 }, Module.Storage));         
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Collector { HP = 10, Level = Level.First, Price = 75, CollectPerCruise = 20 }, Module.Collector));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.First, Price = 0 }, Module.EmptyBody));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new EmptyBody { Level = Level.First, Price = 0 }, Module.EmptyBody));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Engine { HP = -10, Level = Level.First, Price = 200,
+                EnergyConsymptionPer100Kilometers = 50, EnergyConsymptionPerBattle = 10 }, Module.Engine));          
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.First, Price = 100 }, Module.Body));
+            BaseComplectation.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.First, Price = 100 }, Module.Body));
 
             ModulesLocationValidator = new List<List<bool>>
             {
