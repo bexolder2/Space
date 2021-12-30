@@ -73,6 +73,9 @@
     <Compile Include="FightWindow.xaml.cs">
       <DependentUpon>FightWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MarketWindow.xaml.cs">
+      <DependentUpon>MarketWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Selector\ModuleSelector.cs" />
     <Compile Include="Selector\TemplateSelector.cs" />
     <Compile Include="UpgradeWindow.xaml.cs">
@@ -115,6 +118,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MarketWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\CommonResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
