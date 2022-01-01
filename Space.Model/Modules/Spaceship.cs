@@ -1,6 +1,7 @@
 ﻿using Space.Helpers.Interfaces;
 using Space.Model.Enums;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Space.Model.Modules
 {
@@ -10,8 +11,15 @@ namespace Space.Model.Modules
         private int damage;
         private int availablePowerReserve;
         private List<KeyValuePair<IBindableModel, Module>> shipModules;
+        private Point currentCoordinates;
 
         #region properties
+        public Point CurrentCoordinates
+        {
+            get => currentCoordinates;
+            set => Set(ref currentCoordinates, value);
+        }
+
         public int HP
         {
             get => hp;

@@ -1,5 +1,7 @@
 ﻿using Space.ViewModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Space.View
 {
@@ -8,6 +10,11 @@ namespace Space.View
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void OnItemDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            (DataContext as MainViewModel).NewPositionClickCommand.Execute(((ListViewItem)sender).Content);
         }
     }
 }

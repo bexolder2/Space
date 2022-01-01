@@ -9,8 +9,15 @@ namespace Space.Model.Modules
         private CellType cellType;
         private string name;
         private Point coordinates;
+        private Asteroid asteroid;
 
         #region properties
+        public Asteroid Asteroid
+        {
+            get => asteroid;
+            set => Set(ref asteroid, value);
+        }
+
         public Action CellAction
         {
             get => cellAction;

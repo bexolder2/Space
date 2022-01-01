@@ -7,6 +7,7 @@
     <clr:String x:Key="Ore">&#xF159;</clr:String>
     <clr:String x:Key="Distance">&#xEF90;</clr:String>
     <clr:String x:Key="HealthPoint">&#xEA18;</clr:String>
+    <clr:String x:Key="Damage">&#xE1D1;</clr:String>
     <clr:String x:Key="Upgrade">&#xE950;</clr:String>
     <clr:String x:Key="Capitulation">&#xEB4B;</clr:String>
 </ResourceDictionary>

@@ -50,6 +50,7 @@
     <Compile Include="Converters\IBindableModelToModelTextConverter.cs" />
     <Compile Include="Deserializer\JsonDeserializer.cs" />
     <Compile Include="Extensions\LinqExt.cs" />
+    <Compile Include="Helpers\IntersectionHelper.cs" />
     <Compile Include="Helpers\ShipPropertyCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -453,10 +453,13 @@ namespace Space.ViewModel
             bool result = false;
             if (selectedModule.Key != null)
             {
-                if (((BaseModel)PlayersShipModules[selectedModuleIndex].Key).Level != Level.Third)
+                if (selectedModuleIndex >= 0)
                 {
-                    result = true;
-                }
+                    if (((BaseModel)PlayersShipModules[selectedModuleIndex].Key).Level != Level.Third)
+                    {
+                        result = true;
+                    }
+                }                
             }
             return result;
         }
@@ -538,6 +541,7 @@ namespace Space.ViewModel
             var result = PlayersShipModules.Except(buyBuffer).ToList();
 
             Messenger.Default.Send(result);
+            Messenger.Default.Send(true);
         }
 
         private bool CanMoveCommandExecute(object p)

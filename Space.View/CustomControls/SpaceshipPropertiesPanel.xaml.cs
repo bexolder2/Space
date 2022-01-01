@@ -32,6 +32,17 @@ namespace Space.View.CustomControls
             get => (int)GetValue(HealthPointProperty);
             set => SetValue(HealthPointProperty, value);
         }
+
+        public static readonly DependencyProperty DamageProperty =
+            DependencyProperty.Register("Damage",
+                typeof(int),
+                typeof(SpaceshipPropertiesPanel));
+
+        public int Damage
+        {
+            get => (int)GetValue(DamageProperty);
+            set => SetValue(DamageProperty, value);
+        }
         #endregion
     }
 }

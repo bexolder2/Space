@@ -15,8 +15,13 @@
         <TextBlock Text="{Binding Path=Distance, ElementName=Spaceship, Mode=TwoWay}"/>
         <TextBlock Margin="15,0,0,0">
                 <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource HealthPoint}"/>
-                <Run Text="Energy: "/>
+                <Run Text="HP: "/>
         </TextBlock>
         <TextBlock Text="{Binding Path=HealthPoint, ElementName=Spaceship, Mode=TwoWay}"/>
+        <TextBlock Margin="15,0,0,0">
+                <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Damage}"/>
+                <Run Text="Damage: "/>
+        </TextBlock>
+        <TextBlock Text="{Binding Path=Damage, ElementName=Spaceship, Mode=TwoWay}"/>
     </StackPanel>
 </UserControl>

@@ -6,11 +6,14 @@
         xmlns:local="clr-namespace:Space.View"
         xmlns:customControls="clr-namespace:Space.View.CustomControls"
         xmlns:selector="clr-namespace:Space.View.Selector"
+        xmlns:proxy="clr-namespace:Space.Helpers.Proxy;assembly=Space.Helpers"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
 
     <Window.Resources>
+        <proxy:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        
         <DataTemplate x:Key="EmptyCell">
             <Button Height="80"
                     Width="80"
@@ -72,6 +75,12 @@
                 <Button.Background>
                     <ImageBrush ImageSource="Images/ship.png"/>
                 </Button.Background>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </DataTemplate>
 
@@ -81,6 +90,12 @@
                 <Button.Background>
                     <ImageBrush ImageSource="Images/player-asteroid.png"/>
                 </Button.Background>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </DataTemplate>
 
@@ -90,6 +105,12 @@
                 <Button.Background>
                     <ImageBrush ImageSource="Images/player-planet1.png"/>
                 </Button.Background>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </DataTemplate>
 
@@ -99,6 +120,12 @@
                 <Button.Background>
                     <ImageBrush ImageSource="Images/player-planet2.png"/>
                 </Button.Background>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </DataTemplate>
 
@@ -108,6 +135,12 @@
                 <Button.Background>
                     <ImageBrush ImageSource="Images/player-station.png"/>
                 </Button.Background>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move"
+                                  Command="{Binding Source={StaticResource Proxy}, Path=Data.MoveCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </DataTemplate>
 
@@ -139,19 +172,30 @@
             <customControls:SpaceshipPropertiesPanel Grid.Column="1"
                                                      Margin="10,0"
                                                      VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
+                                                     HorizontalAlignment="Right"
+                                                     Distance="{Binding Player.Spaceship.AvailablePowerReserve, Mode=TwoWay}"
+                                                     HealthPoint="{Binding Player.Spaceship.HP, Mode=TwoWay}"
+                                                     Damage="{Binding Player.Spaceship.Damage, Mode=TwoWay}"/>
             <customControls:TopButtonsPanel Grid.Column="2"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Right"/>
         </Grid>
 
-        <ListView Grid.Row="1"
-                  ItemsSource="{Binding Cells}"
-                  ItemTemplateSelector="{StaticResource TemplateSelector}">
+        <ListView x:Name="map"
+                  Grid.Row="1"
+                  ItemsSource="{Binding Cells, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                  ItemTemplateSelector="{StaticResource TemplateSelector}"
+                  SelectedItem="{Binding SelectedCell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ListView.Background>
                 <ImageBrush ImageSource="Images/bg1.jpeg"/>
             </ListView.Background>
-            
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnItemDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="40"
