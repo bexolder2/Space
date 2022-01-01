@@ -448,7 +448,7 @@ namespace Space.ViewModel
         }
         #endregion
 
-        private bool CanUpgradeCommandExecute(object p)
+        private bool CanUpgradeCommandExecute(object _)
         {
             bool result = false;
             if (selectedModule.Key != null)
@@ -531,8 +531,8 @@ namespace Space.ViewModel
             }
         }
 
-        private bool CanCancelCommandExecute(object p) => true;
-        private void OnCancelCommandExecuted(object p)
+        private bool CanCancelCommandExecute(object _) => true;
+        private void OnCancelCommandExecuted(object _)
         {
             foreach(var item in Bodies)
             {
@@ -544,19 +544,19 @@ namespace Space.ViewModel
             Messenger.Default.Send(true);
         }
 
-        private bool CanMoveCommandExecute(object p)
+        private bool CanMoveCommandExecute(object _)
         {
             if (PlayersShipModules.Count > 0)
                 return true;
             else return false;
         }
-        private void OnMoveCommandExecuted(object p)
+        private void OnMoveCommandExecuted(object _)
         {
             startIndex = selectedModuleIndex;
         }
 
         #region modules moving
-        private bool CanNewPositionClickCommandExecute(object p) => true;
+        private bool CanNewPositionClickCommandExecute(object _) => true;
         private void OnNewPositionClickCommandExecuted(object index)
         {
             if(index != null && index is int)
