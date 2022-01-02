@@ -5,7 +5,6 @@ namespace Space.Model.Modules
 {
     public class Cell : BindableBase.BindableBase
     {
-        private Action cellAction;
         private CellType cellType;
         private string name;
         private Point coordinates;
@@ -16,12 +15,6 @@ namespace Space.Model.Modules
         {
             get => asteroid;
             set => Set(ref asteroid, value);
-        }
-
-        public Action CellAction
-        {
-            get => cellAction;
-            set => Set(ref cellAction, value);
         }
 
         public CellType CellType

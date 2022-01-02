@@ -33,7 +33,6 @@ namespace Space.Model.Modules
         {
             name = new NameGenerator().Generate();
             numberOfOre = new OreGenerator().Generate();
-            //TODO: generate coordinates
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Space.ViewModel
             GiveUpCommand = new RelayCommand(OnGiveUpCommandExecuted, CanGiveUpCommandExecute);
             MoveCommand = new RelayCommand(OnMoveCommandExecuted, CanMoveCommandExecute);
             NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
+            CollectCommand = new RelayCommand(OnCollectCommandExecuted, CanCollectCommandExecute);
             #endregion
 
             InitializeEmptyPoints();
@@ -49,6 +50,7 @@ namespace Space.ViewModel
         public ICommand GiveUpCommand { get; private set; }
         public ICommand MoveCommand { get; private set; }
         public ICommand NewPositionClickCommand { get; private set; }
+        public ICommand CollectCommand { get; private set; }
         #endregion
 
         #region properties
@@ -75,11 +77,19 @@ namespace Space.ViewModel
         private void InitializeMoons()
         {
             Moon planet1 = (Moon)new MoonGenerator().Generate();
-            Moon planet2 = (Moon)new MoonGenerator().Generate();
+            Moon planet2;
+            int moon1 = (int)planet1;
+            if(moon1 >= 3)
+            {
+               planet2 = (Moon)2;
+            }
+            else
+            {
+                planet2 = (Moon)(moon1 + 1);
+            }
 
             var pl1 = new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Planet1,
                 Name = planet1.ToString(),
                 Coordinates = new CoordinateGenerator().Generate(ConvertCellsToPoints())
@@ -90,7 +100,6 @@ namespace Space.ViewModel
 
             var pl2 = new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Planet2,
                 Name = planet2.ToString(),
                 Coordinates = new CoordinateGenerator().Generate(ConvertCellsToPoints())
@@ -105,7 +114,6 @@ namespace Space.ViewModel
             Cells.RemoveAt(820);
             Cells.Insert(820, new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Station,
                 Name = "",
                 Coordinates = new Point { X = 20, Y = 20 }
@@ -120,7 +128,6 @@ namespace Space.ViewModel
                 {
                     Cells.Add(new Cell
                     {
-                        CellAction = Action.None,
                         CellType = CellType.Empty,
                         Name = "",
                         Coordinates = new Point { X = j, Y = i }
@@ -167,7 +174,6 @@ namespace Space.ViewModel
             //Cells.RemoveAt(0);
             //Cells.Insert(0, new Cell
             //{
-            //    CellAction = Action.None,
             //    CellType = CellType.Player,
             //    Name = "",
             //    Coordinates = new Point { X = 0, Y = 0 }
@@ -175,31 +181,31 @@ namespace Space.ViewModel
             Cells.RemoveAt(1);
             Cells.Insert(1, new Cell
             {
-                CellAction = Action.None,
+                Asteroid = new Asteroid
+                {
+                    Name = "%TY%NJK"
+                },
                 CellType = CellType.Asteroid,
-                Name = "",
+                Name = "%TY%NJK",
                 Coordinates = new Point { X = 1, Y = 0 }
             });
             Cells.RemoveAt(2);
             Cells.Insert(2, new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Planet1,
-                Name = "",
+                Name = Moon.Callisto.ToString(),
                 Coordinates = new Point { X = 2, Y = 0 }
             });
             Cells.RemoveAt(3);
             Cells.Insert(3, new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Planet2,
-                Name = "",
+                Name = Moon.Io.ToString(),
                 Coordinates = new Point { X = 3, Y = 0 }
             });
             Cells.RemoveAt(4);
             Cells.Insert(4, new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Asteroid,
                 Name = "",
                 Coordinates = new Point { X = 4, Y = 0 }
@@ -207,13 +213,28 @@ namespace Space.ViewModel
             Cells.RemoveAt(5);
             Cells.Insert(5, new Cell
             {
-                CellAction = Action.None,
                 CellType = CellType.Station,
                 Name = "",
                 Coordinates = new Point { X = 5, Y = 0 }
             });
         }
         #endregion
+
+        private void CreateAsteroid()
+        {
+            Cell asteroid = new Cell
+            {
+                CellType = CellType.Asteroid,
+                Coordinates = new CoordinateGenerator().Generate(ConvertCellsToPoints()),
+                Asteroid = new Asteroid
+                {
+                    Name = new NameGenerator().Generate(),
+                    NumberOfOre = new OreGenerator().Generate()
+                }
+            };
+            asteroid.Asteroid.Coordinates = asteroid.Coordinates; 
+            asteroid.Name = asteroid.Asteroid.Name;
+        }
 
         public void UpdateShipModules(List<KeyValuePair<IBindableModel, Module>> newModules)
         {
@@ -255,7 +276,8 @@ namespace Space.ViewModel
             return result;
         }
 
-        private bool CanMoveCommandExecute(object unused)
+        #region move
+        private bool CanMoveCommandExecute(object _)
         {
             bool result = false;
             if (Cells.Count > 0 && SelectedCell != null)
@@ -264,7 +286,7 @@ namespace Space.ViewModel
             }
             return result;
         }
-        private void OnMoveCommandExecuted(object unused)
+        private void OnMoveCommandExecuted(object _)
         {
             if (SelectedCell != null)
             {
@@ -272,7 +294,7 @@ namespace Space.ViewModel
             }
         }
 
-        private bool CanNewPositionClickCommandExecute(object unused) => true;
+        private bool CanNewPositionClickCommandExecute(object _) => true;
         private void OnNewPositionClickCommandExecuted(object cell)
         {
             if (cell != null)
@@ -302,6 +324,8 @@ namespace Space.ViewModel
                             int consumptionPer100km = ShipPropertyCounter.GetEnergyСonsumption(ref player);
                             Player.Resources.EnergyValue -= consumptionPer100km * distance * 10;
                             CalculateShipParams(true);
+                            startCoordinates = new Point(-1, -1);
+                            Player.Spaceship.CurrentCoordinates = new Point(finishCoordinates.X, finishCoordinates.Y);
                         }
                     }
                 }
@@ -312,9 +336,95 @@ namespace Space.ViewModel
         {
             return (int)((point2.X - point1.X) + 1 + (point2.Y - point1.Y));
         }
+        #endregion
 
-        private bool CanGiveUpCommandExecute(object p) => true;
-        private void OnGiveUpCommandExecuted(object p)
+        #region collect
+        private bool CanCollectCommandExecute(object parameter)
+        {
+            bool result = false;
+            int cellIndex = (int)(Player.Spaceship.CurrentCoordinates.Y * numberRowsOrColumns + Player.Spaceship.CurrentCoordinates.X);
+
+            if(parameter != null)
+            {
+                if (parameter.ToString() == "asteroid" && Cells[cellIndex].Asteroid != null)
+                {
+                    if (Cells[cellIndex].Asteroid.NumberOfOre > 0)
+                    {
+                        result = true;
+                    }
+                }
+                else if (parameter.ToString() == "planet")
+                {
+                    var cell = Cells[cellIndex];
+                    if (cell.CellType == CellType.Planet1 || cell.CellType == CellType.Planet2 ||
+                        cell.CellType == CellType.PlayerAndPlanet1 || cell.CellType == CellType.PlayerAndPlanet2)
+                    {
+                        result = true;
+                    }
+                }
+            }
+            return result;
+        }
+        private void OnCollectCommandExecuted(object parameter)
+        {
+            if (parameter.ToString() == "asteroid")
+            {
+                int asteroidIndex = (int)(Player.Spaceship.CurrentCoordinates.Y * numberRowsOrColumns + Player.Spaceship.CurrentCoordinates.X);
+                if (Player.Resources.EnergyValue > 0)
+                {
+                    CollectOre(parameter.ToString(), asteroidIndex);
+                }
+            }
+            else
+            {
+                if (Player.Resources.EnergyValue > 0)
+                {
+                    CollectOre(parameter.ToString());
+                }
+            }
+            ShipPropertyCounter.CountAvailableDistance(ref player);
+
+            bool isPiratesAttack = new PiratesProbabilityGenertor().Generate();
+            if (isPiratesAttack)
+            {
+                //todo: generate pirates ship => navigate to battle window
+            }
+        }
+
+        private void CollectOre(string param, int index = 0)
+        {
+            int ValuePerIteration = GetNumberOfOrePerCollect();
+            Player.Resources.EnergyValue -= 1;
+            int oreAmount = ValuePerIteration;
+
+            if (param == "asteroid")
+            {
+                int numberOfOre = Cells[index].Asteroid.NumberOfOre;
+                if (numberOfOre < ValuePerIteration)
+                {
+                    oreAmount = numberOfOre;
+                }
+                Cells[index].Asteroid.NumberOfOre -= oreAmount;
+            }
+            Player.Resources.OreValue += oreAmount;
+        }
+
+        private int GetNumberOfOrePerCollect()
+        {
+            int result = 0;
+            foreach(var module in Player.Spaceship.ShipModules)
+            {
+                if(module.Value == Module.Collector)
+                {
+                    result += ((Collector)module.Key).CollectPerCruise;
+                }
+            }
+            return result;
+        }
+        #endregion
+
+        private bool CanGiveUpCommandExecute(object _) => true;
+        private void OnGiveUpCommandExecuted(object _)
         {
 
 
