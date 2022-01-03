@@ -111,7 +111,10 @@ namespace Space.Infrastructure.Helpers
 
             foreach(var item in spaceship.ShipModules)
             {
-                result += ((BaseModel)item.Key).HP;
+                if(item.Value != Module.EmptyBody)
+                {
+                    result += ((BaseModel)item.Key).HP;
+                }  
             }
             spaceship.HP = result;
 

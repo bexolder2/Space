@@ -52,6 +52,8 @@
     <Compile Include="Extensions\LinqExt.cs" />
     <Compile Include="Helpers\IntersectionHelper.cs" />
     <Compile Include="Helpers\ShipPropertyCounter.cs" />
+    <Compile Include="Pirates\BattlleLogger.cs" />
+    <Compile Include="Pirates\ShipConfigurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
