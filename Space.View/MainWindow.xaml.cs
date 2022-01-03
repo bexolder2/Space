@@ -10,6 +10,7 @@ namespace Space.View
         public MainWindow()
         {
             InitializeComponent();
+            App.WindowService = new Services.WindowService();
         }
 
         private void OnItemDoubleClick(object sender, MouseButtonEventArgs e)

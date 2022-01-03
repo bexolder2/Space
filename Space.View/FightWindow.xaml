@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space.View"
         mc:Ignorable="d"
-        Title="FightWindow" Height="450" Width="800">
+        Title="FightWindow" Height="450" Width="800"
+        DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
     <Grid>
         
     </Grid>

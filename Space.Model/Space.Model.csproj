@@ -53,6 +53,7 @@
     <Compile Include="Enums\Module.cs" />
     <Compile Include="Enums\Moon.cs" />
     <Compile Include="Enums\ResourceType.cs" />
+    <Compile Include="Enums\WindowType.cs" />
     <Compile Include="Enums\WndAction.cs" />
     <Compile Include="Entities\Actor.cs" />
     <Compile Include="MapModels\Asteroid.cs" />
@@ -84,6 +85,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\BaseModulesForPirates.json" />
     <None Include="Data\Generator.json" />
     <Content Include="Data\Repairer.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

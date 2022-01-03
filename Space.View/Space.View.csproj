@@ -78,6 +78,8 @@
     </Compile>
     <Compile Include="Selector\ModuleSelector.cs" />
     <Compile Include="Selector\TemplateSelector.cs" />
+    <Compile Include="Services\Interfaces\IWindowService.cs" />
+    <Compile Include="Services\WindiwService.cs" />
     <Compile Include="UpgradeWindow.xaml.cs">
       <DependentUpon>UpgradeWindow.xaml</DependentUpon>
     </Compile>

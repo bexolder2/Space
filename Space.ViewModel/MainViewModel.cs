@@ -2,11 +2,13 @@
 using Space.Helpers;
 using Space.Helpers.Interfaces;
 using Space.Infrastructure.Helpers;
+using Space.Infrastructure.Pirates;
 using Space.Model.BindableBase;
 using Space.Model.Constants;
 using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -24,6 +26,9 @@ namespace Space.ViewModel
         private const int numberRowsOrColumns = 40;
         private Player player;
         private Point startCoordinates;
+
+        public event EventHandler<EventArgs> NavigateToFightWindow;
+        public event EventHandler<EventArgs> NavigateToMarketWindow;
 
         public MainViewModel()
         {
@@ -44,6 +49,8 @@ namespace Space.ViewModel
 
             Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
             Messenger.Default.Register<bool>(this, CalculateShipParams);
+
+            ShipConfigurator sc = new ShipConfigurator();
         }
 
         #region commands
@@ -387,6 +394,7 @@ namespace Space.ViewModel
             bool isPiratesAttack = new PiratesProbabilityGenertor().Generate();
             if (isPiratesAttack)
             {
+                OnNavigateToFightWindow(null);
                 //todo: generate pirates ship => navigate to battle window
             }
         }
@@ -421,7 +429,17 @@ namespace Space.ViewModel
             }
             return result;
         }
+
+        public void OnNavigateToFightWindow(EventArgs args)
+        {
+            NavigateToFightWindow?.Invoke(this, args);
+        }
         #endregion
+
+        public void OnNavigateToMarketWindow(EventArgs args)
+        {
+            NavigateToMarketWindow?.Invoke(this, args);
+        }
 
         private bool CanGiveUpCommandExecute(object _) => true;
         private void OnGiveUpCommandExecuted(object _)
