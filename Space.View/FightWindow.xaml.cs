@@ -8,5 +8,10 @@ namespace Space.View
         {
             InitializeComponent();
         }
+
+        private void TextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }

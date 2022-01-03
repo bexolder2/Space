@@ -1,0 +1,19 @@
+{
+	"baseModules":[
+		"CommandCenter",
+		"EmptyBody",
+		"EmptyBody",
+		"Gun",
+		"Battery",
+		"Engine",
+		"Storage",
+		"Gun",
+		"Engine",
+		"EmptyBody",
+		"Collector",
+		"EmptyBody",
+		"Body",
+		"Body",
+		"Body",
+	]
+}

@@ -271,7 +271,7 @@
         <selector:TemplateSelector x:Key="TemplateSelector"/>
     </Window.Resources>
     
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition/>

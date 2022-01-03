@@ -11,7 +11,10 @@ using Space.ViewModel.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -25,10 +28,20 @@ namespace Space.ViewModel
         private const int cellDistance = 1000;
         private const int numberRowsOrColumns = 40;
         private Player player;
+        private Pirate pirate;
+        private int maxPlayerHP;
+        private int maxPirateHP;
         private Point startCoordinates;
 
         public event EventHandler<EventArgs> NavigateToFightWindow;
         public event EventHandler<EventArgs> NavigateToMarketWindow;
+        public event EventHandler<EventArgs> CloseFightWindow;
+        public event EventHandler<EventArgs> DisableMainWindow;
+
+        private ShipConfigurator configurator;
+        private BattlleLogger logger;
+        private int battleNumber;
+        private string logText;
 
         public MainViewModel()
         {
@@ -39,6 +52,7 @@ namespace Space.ViewModel
             MoveCommand = new RelayCommand(OnMoveCommandExecuted, CanMoveCommandExecute);
             NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
             CollectCommand = new RelayCommand(OnCollectCommandExecuted, CanCollectCommandExecute);
+            StartBattleCommand = new RelayCommand(OnStartBattleCommandExecuted, CanStartBattleCommandExecute);
             #endregion
 
             InitializeEmptyPoints();
@@ -50,7 +64,9 @@ namespace Space.ViewModel
             Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
             Messenger.Default.Register<bool>(this, CalculateShipParams);
 
-            ShipConfigurator sc = new ShipConfigurator();
+            configurator = new ShipConfigurator();
+            logger = new BattlleLogger();
+            battleNumber = 1;
         }
 
         #region commands
@@ -58,9 +74,34 @@ namespace Space.ViewModel
         public ICommand MoveCommand { get; private set; }
         public ICommand NewPositionClickCommand { get; private set; }
         public ICommand CollectCommand { get; private set; }
+        public ICommand StartBattleCommand { get; private set; }
         #endregion
 
         #region properties
+        public string LogText
+        {
+            get => logText;
+            set => Set(ref logText, value);
+        }
+
+        public int MaxPlayerHP
+        {
+            get => maxPlayerHP;
+            set => Set(ref maxPlayerHP, value);
+        }
+
+        public int MaxPirateHP
+        {
+            get => maxPirateHP;
+            set => Set(ref maxPirateHP, value);
+        }
+
+        public Pirate Pirate
+        {
+            get => pirate;
+            set => Set(ref pirate, value);
+        }
+
         public Cell SelectedCell
         {
             get => selectedCell;
@@ -394,8 +435,10 @@ namespace Space.ViewModel
             bool isPiratesAttack = new PiratesProbabilityGenertor().Generate();
             if (isPiratesAttack)
             {
+                Pirate = null;
+                Pirate = configurator.CreatePirate();
+                CalculateShipsHpAndDamage();
                 OnNavigateToFightWindow(null);
-                //todo: generate pirates ship => navigate to battle window
             }
         }
 
@@ -433,6 +476,76 @@ namespace Space.ViewModel
         public void OnNavigateToFightWindow(EventArgs args)
         {
             NavigateToFightWindow?.Invoke(this, args);
+        }
+
+        private void CalculateShipsHpAndDamage()
+        {
+            var spaceship = player.Spaceship;
+            ShipPropertyCounter.CountDamageValue(ref spaceship);
+            ShipPropertyCounter.CountHPValue(ref spaceship);
+
+            var piratesSpaceship = pirate.Spaceship;
+            ShipPropertyCounter.CountDamageValue(ref piratesSpaceship);
+            ShipPropertyCounter.CountHPValue(ref piratesSpaceship);
+        }
+        #endregion
+
+        #region battle
+        private bool CanStartBattleCommandExecute(object _) => true;
+        private void OnStartBattleCommandExecuted(object _)
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += StartBattle;
+            worker.RunWorkerAsync();
+        }
+
+        private void StartBattle(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            bool isPirateAttack = true;
+            while (pirate.Spaceship.HP > 0 && player.Spaceship.HP > 0)
+            {
+                if (isPirateAttack)
+                {
+                    Player.Spaceship.HP -= Pirate.Spaceship.Damage;
+                    LogText += logger.LogAction("Pirate", "Player", pirate.Spaceship.Damage, player.Spaceship.HP, battleNumber);
+                }
+                else
+                {
+                    Pirate.Spaceship.HP -= Player.Spaceship.Damage;
+                    LogText += logger.LogAction("Player", "Pirate", player.Spaceship.Damage, pirate.Spaceship.HP, battleNumber);
+                }
+                isPirateAttack = !isPirateAttack;
+                Thread.Sleep(1000);
+            }
+            battleNumber++;
+            SetBattleResults();
+        }
+
+        private void SetBattleResults()
+        {
+            if (player.Spaceship.HP <= 0)
+            {
+                MessageBox.Show("You are lose :(\nTry again.");
+                OnCloseFightWindow(null);
+                OnDisableMainWindow(null);
+            }
+            else
+            {
+                MessageBox.Show("You are win :)");
+                OnCloseFightWindow(null);
+                Player.Resources.OreValue += 1000; //TODO: validate ore (storage limitation)
+                Player.Resources.EnergyValue += 100;
+            }
+        }
+
+        public void OnCloseFightWindow(EventArgs args)
+        {
+            CloseFightWindow?.Invoke(this, args);
+        }
+
+        public void OnDisableMainWindow(EventArgs args)
+        {
+            DisableMainWindow?.Invoke(this, args);
         }
         #endregion
 

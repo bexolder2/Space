@@ -5,9 +5,152 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space.View"
         mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="NoResize"
         Title="FightWindow" Height="450" Width="800"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+    
+    <Window.Background>
+        <ImageBrush ImageSource="Images/battle_bg.jpg" Stretch="UniformToFill"/>
+    </Window.Background>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0"
+                   Grid.Row="0"
+                   Text="Your ship"
+                   FontWeight="Bold"
+                   FontSize="24"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+
+        <Image Grid.Column="0"
+               Grid.Row="1" 
+               Source="Images/ship.png"
+               Height="80"
+               Width="80"/>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="0"
+                    Grid.Row="2">
+            <TextBlock Text="HP"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="20,0"
+                       FontSize="18"
+                       Foreground="White"/>
+            <ProgressBar x:Name="PlayerProgress"
+                         Minimum="0"
+                         Maximum="{Binding MaxPlayerHP}"
+                         Height="20"
+                         Width="250"
+                         Value="{Binding Player.Spaceship.HP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding Player.Spaceship.HP}"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Foreground="White"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                        Grid.Column="0"
+                        Grid.Row="3">
+            <TextBlock Text="Damage: "
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="20,0"
+                       FontSize="18"
+                       Foreground="White"/>
+            <TextBlock Text="{Binding Player.Spaceship.Damage}"
+                       VerticalAlignment="Center"
+                       Foreground="White"/>
+        </StackPanel>
+
+        <TextBlock Grid.Column="1"
+                   Grid.Row="0"
+                   Text="Pirates ship"
+                   FontWeight="Bold"
+                   FontSize="24"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+
+        <Image Grid.Column="1"
+               Grid.Row="1" 
+               Source="Images/ship.png"
+               Height="80"
+               Width="80"/>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="1"
+                    Grid.Row="2">
+            <TextBlock Text="HP"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="20,0"
+                       FontSize="18"
+                       Foreground="White"/>
+            <ProgressBar Minimum="0"
+                         Maximum="{Binding MaxPirateHP}"
+                         Height="20"
+                         Width="250"
+                         Value="{Binding Pirate.Spaceship.HP}"/>
+            <TextBlock Text="{Binding Pirate.Spaceship.HP}"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Foreground="White"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="1"
+                    Grid.Row="3">
+            <TextBlock Text="Damage: "
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="20,0"
+                       FontSize="18"
+                       Foreground="White"/>
+            <TextBlock Text="{Binding Pirate.Spaceship.Damage}"
+                       VerticalAlignment="Center"
+                       Foreground="White"/>
+        </StackPanel>
+
+        <TextBox Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                 Grid.Row="4"
+                 IsReadOnly="True"
+                 Margin="15"
+                 Text="{Binding LogText}"
+                 Foreground="Red"
+                 FontSize="20"
+                 FontWeight="Bold">
+            <TextBox.Background>
+                <ImageBrush ImageSource="Images/battle_bg.jpg" Stretch="UniformToFill" Opacity="0.1"/>
+            </TextBox.Background>
+        </TextBox>
+
+        <Button Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="5"
+                Content="Start battle"
+                FontWeight="Bold"
+                Width="150"
+                Height="25"
+                Background="Red"
+                Command="{Binding StartBattleCommand}"/>
     </Grid>
 </Window>

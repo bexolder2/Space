@@ -21,6 +21,10 @@ namespace Space.Model.Constants
         public const string GeneratorDataPath = "\\Space\\Space.Model\\Data\\Generator.json";
         public const string RepairerDataPath = "\\Space\\Space.Model\\Data\\Repairer.json";
 
+        public const string BasePiratesDataPath = "\\Space\\Space.Model\\Data\\BaseModulesForPirates.json";
+
+        public const string BaseLogPath = "\\Space\\Space.View\\Battle";
+
         public static Dictionary<Module, int> MinimalShipConfiguration { get; private set; }
         public static List<KeyValuePair<IBindableModel, Module>> BaseComplectation { get; private set; }
         public static int MaximumNumberOfCommandCenter = 1;
