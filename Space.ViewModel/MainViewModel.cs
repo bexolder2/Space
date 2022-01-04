@@ -32,6 +32,7 @@ namespace Space.ViewModel
         private int maxPlayerHP;
         private int maxPirateHP;
         private Point startCoordinates;
+        private int winCounter = 0;
 
         public event EventHandler<EventArgs> NavigateToFightWindow;
         public event EventHandler<EventArgs> NavigateToMarketWindow;
@@ -486,6 +487,15 @@ namespace Space.ViewModel
                     oreAmount = numberOfOre;
                 }
                 Cells[index].Asteroid.NumberOfOre -= oreAmount;
+
+                if (Cells[index].Asteroid.NumberOfOre == 0)
+                {
+                    Cells[index].CellType = CellType.Player;
+                    Cells[index].Asteroid = null;
+                    var tmp = Cells[index];
+                    Cells.RemoveAt(index);
+                    Cells.Insert(index, tmp);
+                }
             }
             Player.Resources.OreValue += oreAmount;
         }
@@ -565,6 +575,14 @@ namespace Space.ViewModel
                 OnCloseFightWindow(null);
                 Player.Resources.OreValue += 1000; //TODO: validate ore (storage limitation)
                 Player.Resources.EnergyValue += 100;
+
+                winCounter++;
+
+                if (winCounter == 3)
+                {
+                    winCounter = 0;
+                    CreateAsteroid();
+                }
             }
         }
 
