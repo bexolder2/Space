@@ -113,8 +113,19 @@ namespace Space.Infrastructure.Pirates
 
         private Level GenerateShipLevel()
         {
+            Level result = Level.First;
             Random rnd = new Random();
-            return (Level)rnd.Next(0, 4);
+            int value = rnd.Next(0, 1000);
+            if(value > 333 && value <= 666)
+            {
+                result = Level.Second;
+            }
+            else if (value > 666 && value <= 999)
+            {
+                result = Level.Third;
+            }
+
+            return result;
         }
 
         private int GenerateNumberOfAdditionalGuns()
