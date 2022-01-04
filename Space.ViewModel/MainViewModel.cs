@@ -5,6 +5,7 @@ using Space.Infrastructure.Helpers;
 using Space.Infrastructure.Pirates;
 using Space.Model.BindableBase;
 using Space.Model.Constants;
+using Space.Model.Entities;
 using Space.Model.Enums;
 using Space.Model.Modules;
 using Space.ViewModel.Command;
@@ -43,6 +44,9 @@ namespace Space.ViewModel
         private int battleNumber;
         private string logText;
 
+        private MarketModel buyModel;
+        private MarketModel sellModel;
+
         public MainViewModel()
         {
             Cells = new ObservableCollection<Cell>();
@@ -53,6 +57,9 @@ namespace Space.ViewModel
             NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
             CollectCommand = new RelayCommand(OnCollectCommandExecuted, CanCollectCommandExecute);
             StartBattleCommand = new RelayCommand(OnStartBattleCommandExecuted, CanStartBattleCommandExecute);
+            OpenMarketCommand = new RelayCommand(OnOpenMarketCommandExecuted, CanOpenMarketCommandExecute);
+            BuyCommand = new RelayCommand(OnBuyCommandExecuted, CanBuyCommandExecute);
+            SellCommand = new RelayCommand(OnSellCommandExecuted, CanSellCommandExecute);
             #endregion
 
             InitializeEmptyPoints();
@@ -67,6 +74,9 @@ namespace Space.ViewModel
             configurator = new ShipConfigurator();
             logger = new BattlleLogger();
             battleNumber = 1;
+
+            BuyModel = new MarketModel();
+            SellModel = new MarketModel();
         }
 
         #region commands
@@ -75,9 +85,24 @@ namespace Space.ViewModel
         public ICommand NewPositionClickCommand { get; private set; }
         public ICommand CollectCommand { get; private set; }
         public ICommand StartBattleCommand { get; private set; }
+        public ICommand OpenMarketCommand { get; private set; }
+        public ICommand BuyCommand { get; private set; }
+        public ICommand SellCommand { get; private set; }
         #endregion
 
         #region properties
+        public MarketModel BuyModel
+        {
+            get => buyModel;
+            set => Set(ref buyModel, value);
+        }
+
+        public MarketModel SellModel
+        {
+            get => sellModel;
+            set => Set(ref sellModel, value);
+        }
+
         public string LogText
         {
             get => logText;
@@ -549,16 +574,140 @@ namespace Space.ViewModel
         }
         #endregion
 
+        #region market
+        private bool CanOpenMarketCommandExecute(object _) => true;
+        private void OnOpenMarketCommandExecuted(object _)
+        {
+            OnNavigateToMarketWindow(null);
+        }
+
         public void OnNavigateToMarketWindow(EventArgs args)
         {
             NavigateToMarketWindow?.Invoke(this, args);
         }
 
+        private bool CanBuyCommandExecute(object _)
+        {
+            if(BuyModel.Value > 0)
+            {
+                if (BuyModel.Value > 0 && BuyModel.Value < 100)
+                {
+                    BuyModel.Price = BuyModel.Value * 0.5;
+                }
+                else if (BuyModel.Value >= 100 && BuyModel.Value < 500)
+                {
+                    BuyModel.Price = BuyModel.Value * 0.4;
+                }
+                else if (BuyModel.Value >= 500 && BuyModel.Value < 1500)
+                {
+                    if (BuyModel.IsDelivery)
+                    {
+                        BuyModel.Price = BuyModel.Value * 0.4;
+                    }
+                    else
+                    {
+                        BuyModel.Price = BuyModel.Value * 0.3;
+                    }
+                }
+                else if (BuyModel.Value >= 1500)
+                {
+                    if (BuyModel.IsDelivery)
+                    {
+                        BuyModel.Price = BuyModel.Value * 0.3;
+                    }
+                    else
+                    {
+                        BuyModel.Price = BuyModel.Value * 0.1;
+                    }
+                }
+            }
+            return true;
+        }
+        private void OnBuyCommandExecuted(object _)
+        {
+            if (Player.Resources.CryptocurrencyValue - BuyModel.Price >= 0)
+            {
+                if (BuyModel.IsDelivery)
+                {
+                    BuyEnergy();
+                }
+                else
+                {
+                    if (ValidatePositionForMarketAction())
+                    {
+                        BuyEnergy();
+                    }
+                }
+            }
+        }
+
+        private bool CanSellCommandExecute(object _)
+        {
+            if (SellModel.Value > 0)
+            {
+                if (SellModel.Value > 0 && SellModel.Value < 100)
+                {
+                    SellModel.Price = SellModel.Value * 0.12;
+                }
+                else if (SellModel.Value >= 100 && SellModel.Value < 500)
+                {
+                    SellModel.Price = SellModel.Value * 0.1;
+                }
+                else if (SellModel.Value >= 500 && SellModel.Value < 1500)
+                {
+                    SellModel.Price = SellModel.Value * 0.08;
+                }
+                else if (SellModel.Value >= 1500)
+                {
+                    SellModel.Price = SellModel.Value * 0.06;
+                }
+            }
+            return true;
+        }
+        private void OnSellCommandExecuted(object _)
+        {
+            if (ValidatePositionForMarketAction())
+            {
+                if (Player.Resources.OreValue - SellModel.Value >= 0)
+                {
+                    Player.Resources.OreValue -= SellModel.Value;
+                    Player.Resources.CryptocurrencyValue += SellModel.Price;
+                }
+                else
+                {
+                    MessageBox.Show("Недостаточно руды!");
+                }
+            }
+        }
+
+        private bool ValidatePositionForMarketAction()
+        {
+            bool result = false;
+
+            if (Cells.Contains(Cells.FirstOrDefault(x => x.CellType == CellType.PlayerAndStation)))
+            {
+                result = true;
+            }
+            else
+            {
+                MessageBox.Show("Нужно переместится на клетку со станцией чтоб продать руду.");
+            }
+
+            return result;
+        }
+
+        private void BuyEnergy()
+        {
+            Player.Resources.CryptocurrencyValue -= BuyModel.Price;
+            Player.Resources.EnergyValue += BuyModel.Value;
+        }
+        #endregion
+
         private bool CanGiveUpCommandExecute(object _) => true;
         private void OnGiveUpCommandExecuted(object _)
         {
-
-
+            MessageBox.Show("You are lose :(\nTry again.");
+            OnDisableMainWindow(null);
         }
     }
 }

@@ -10,4 +10,5 @@
     <clr:String x:Key="Damage">&#xE1D1;</clr:String>
     <clr:String x:Key="Upgrade">&#xE950;</clr:String>
     <clr:String x:Key="Capitulation">&#xEB4B;</clr:String>
+    <clr:String x:Key="Market">&#xE8C7;</clr:String>
 </ResourceDictionary>

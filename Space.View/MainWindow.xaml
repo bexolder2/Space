@@ -8,7 +8,7 @@
         xmlns:selector="clr-namespace:Space.View.Selector"
         xmlns:proxy="clr-namespace:Space.Helpers.Proxy;assembly=Space.Helpers"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="800" Width="800"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
 
     <Window.Resources>
@@ -274,6 +274,7 @@
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -282,7 +283,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             
             <customControls:ResourcePanel Grid.Column="0"
@@ -300,13 +300,14 @@
                                                      Distance="{Binding Player.Spaceship.AvailablePowerReserve, Mode=TwoWay}"
                                                      HealthPoint="{Binding Player.Spaceship.HP, Mode=TwoWay}"
                                                      Damage="{Binding Player.Spaceship.Damage, Mode=TwoWay}"/>
-            <customControls:TopButtonsPanel Grid.Column="2"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"/>
         </Grid>
 
+        <customControls:TopButtonsPanel Grid.Row="1"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"/>
+
         <ListView x:Name="map"
-                  Grid.Row="1"
+                  Grid.Row="2"
                   ItemsSource="{Binding Cells, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                   ItemTemplateSelector="{StaticResource TemplateSelector}"
                   SelectedItem="{Binding SelectedCell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">

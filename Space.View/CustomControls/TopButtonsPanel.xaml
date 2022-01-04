@@ -9,6 +9,16 @@
              x:Name="Root">
     <StackPanel Orientation="Horizontal">
         <Button Margin="5,0"
+                Command="{Binding OpenMarketCommand}">
+            <Button.Content>
+                <TextBlock>
+                    <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Market}"/>
+                    <Run Text="Market"/>
+                </TextBlock>
+            </Button.Content>
+        </Button>
+        
+        <Button Margin="5,0"
                 Click="OpenUpgradeWnd">
             <Button.Content>
                 <TextBlock>

@@ -30,7 +30,7 @@ namespace Space.View.Services
                     break;
                 case WindowType.MarketWindow:
                     MarketWnd = new MarketWindow();
-                    MarketWnd.Show();
+                    MarketWnd.ShowDialog();
                     break;
                 case WindowType.UpgradeWindow:
                     break;

@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         Title="MarketWindow" 
         Height="220" Width="600"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -36,6 +37,7 @@
                        Margin="10,0"/>
             <TextBox Height="20"
                      Width="100"
+                     Text="{Binding BuyModel.Value, Mode=TwoWay}"
                      Margin="10,0"/>
         </StackPanel>
 
@@ -47,6 +49,8 @@
                        Margin="10,0"/>
             <TextBox Height="20"
                      Width="100"
+                     Text="{Binding BuyModel.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsReadOnly="True"
                      Margin="9,0"/>
         </StackPanel>
 
@@ -54,7 +58,8 @@
                   Grid.Row="3"
                   Content="Delivery"
                   Margin="10,0"
-                  VerticalAlignment="Center"/>
+                  VerticalAlignment="Center"
+                  IsChecked="{Binding BuyModel.IsDelivery, Mode=TwoWay}"/>
 
         <StackPanel Orientation="Horizontal"
                     Grid.Column="0"
@@ -62,6 +67,7 @@
             <TextBox IsReadOnly="True"
                      Height="20"
                      Width="100"
+                     Text="{Binding BuyModel.Value, Mode=TwoWay}"
                      Margin="10,0"/>
             <TextBlock Text="MWt"
                        VerticalAlignment="Center"/>
@@ -69,7 +75,8 @@
             <TextBox IsReadOnly="True"
                      Height="20"
                      Width="100"
-                     Margin="10,0"/>
+                     Margin="10,0"
+                     Text="{Binding BuyModel.Price, Mode=TwoWay}"/>
             <TextBlock Text="₡"
                        VerticalAlignment="Center"/>
         </StackPanel>
@@ -78,7 +85,8 @@
                 Grid.Row="5"
                 Content="Buy"
                 Width="100"
-                Height="25"/>
+                Height="25"
+                Command="{Binding BuyCommand}"/>
 
         <TextBlock Grid.Column="1"
                    Grid.Row="0"
@@ -95,6 +103,7 @@
                        Margin="10,0"/>
             <TextBox Height="20"
                      Width="100"
+                     Text="{Binding SellModel.Value, Mode=TwoWay}"
                      Margin="27,0"/>
         </StackPanel>
 
@@ -106,6 +115,8 @@
                        Margin="10,0"/>
             <TextBox Height="20"
                      Width="100"
+                     IsReadOnly="True"
+                     Text="{Binding SellModel.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="9,0"/>
         </StackPanel>
 
@@ -115,6 +126,7 @@
             <TextBox IsReadOnly="True"
                      Height="20"
                      Width="100"
+                     Text="{Binding SellModel.Value, Mode=TwoWay}"
                      Margin="10,0"/>
             <TextBlock Text="ore"
                        VerticalAlignment="Center"/>
@@ -122,7 +134,8 @@
             <TextBox IsReadOnly="True"
                      Height="20"
                      Width="100"
-                     Margin="10,0"/>
+                     Margin="10,0"
+                     Text="{Binding SellModel.Price, Mode=TwoWay}"/>
             <TextBlock Text="₡"
                        VerticalAlignment="Center"/>
         </StackPanel>
@@ -131,6 +144,7 @@
                 Grid.Row="5"
                 Content="Sell"
                 Width="100"
-                Height="25"/>
+                Height="25"
+                Command="{Binding SellCommand}"/>
     </Grid>
 </Window>
