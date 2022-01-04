@@ -1,4 +1,6 @@
-﻿namespace Space.Model.Modules
+﻿using System.Windows;
+
+namespace Space.Model.Modules
 {
     public class ResourcesBase : BindableBase.BindableBase
     {
@@ -10,7 +12,14 @@
         public double CryptocurrencyValue
         {
             get => cryptocurrencyValue;
-            set => Set(ref cryptocurrencyValue, value);
+            set
+            {
+                Set(ref cryptocurrencyValue, value);
+                if (value >= 5000)
+                {
+                    MessageBox.Show("You are win!");
+                }
+            }
         }
 
         public double EnergyValue

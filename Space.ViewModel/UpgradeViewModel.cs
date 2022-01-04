@@ -523,10 +523,44 @@ namespace Space.ViewModel
                     
                     Messenger.Default.Send(true);
                     MessageBox.Show($"Модуль {newModule.Value} улучшен");
+                    CheckWin();
                 }
                 else
                 {
                     MessageBox.Show($"Недостаточно крипты для улучшения");
+                }
+            }
+        }
+
+        private void CheckWin()
+        {
+            if (((BaseModel)playersShipModules.FirstOrDefault(x => x.Value == Module.CommandCenter).Key).Level == Level.Third)
+            {
+                if (Bodies.Count == 12)
+                {
+                    List<bool> resultList = new List<bool>();
+                    bool result = false;
+
+                    foreach(var module in playersShipModules)
+                    {
+                        resultList.Add(((BaseModel)module.Key).Level == Level.Third);
+                    }
+
+                    foreach(var body in Bodies)
+                    {
+                        resultList.Add(((BaseModel)body.Key).Level == Level.Third);
+                    }
+
+                    foreach(var item in resultList)
+                    {
+                        result = result && item; 
+                    }
+
+                    if (result)
+                    {
+                        MessageBox.Show("You are win!");
+                        Messenger.Default.Send("win");
+                    }
                 }
             }
         }

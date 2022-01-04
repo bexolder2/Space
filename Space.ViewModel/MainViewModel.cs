@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -70,6 +69,7 @@ namespace Space.ViewModel
 
             Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
             Messenger.Default.Register<bool>(this, CalculateShipParams);
+            Messenger.Default.Register<string>(this, Win);
 
             configurator = new ShipConfigurator();
             logger = new BattlleLogger();
@@ -336,6 +336,11 @@ namespace Space.ViewModel
                 ShipPropertyCounter.CountDamageValue(ref spaceship);
                 ShipPropertyCounter.CountHPValue(ref spaceship);
             }
+        }
+
+        public void Win(string key)
+        {
+            OnDisableMainWindow(null);
         }
 
         private List<Point> ConvertCellsToPoints()
