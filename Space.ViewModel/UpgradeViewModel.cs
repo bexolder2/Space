@@ -471,7 +471,7 @@ namespace Space.ViewModel
                 KeyValuePair<IBindableModel, Module> newModule = new KeyValuePair<IBindableModel, Module>();
                 KeyValuePair<IBindableModel, Module> body = new KeyValuePair<IBindableModel, Module>();
 
-                if (parameter.ToString() == "body")
+                if (parameter != null && parameter.ToString() == "body")
                 {
                     if(Bodies.Count > 0)
                     {
@@ -508,7 +508,7 @@ namespace Space.ViewModel
                     var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
                     player.Resources.CryptocurrencyValue -= ((BaseModel)selected.Key).Price;
 
-                    if (parameter.ToString() == "body")
+                    if (parameter != null && parameter.ToString() == "body")
                     {
                         int index = Bodies.IndexOf(body);
                         Bodies.RemoveAt(index);

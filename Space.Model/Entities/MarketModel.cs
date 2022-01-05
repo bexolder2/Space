@@ -2,12 +2,12 @@
 {
     public class MarketModel : BindableBase.BindableBase
     {
-        private int value;
+        private uint value;
         private double price;
         private bool isDelivery;
 
         #region properties
-        public int Value
+        public uint Value
         {
             get => value;
             set => Set(ref this.value, value);

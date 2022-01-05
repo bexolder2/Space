@@ -12,7 +12,8 @@
         Width="800"
         DataContext="{Binding UpgradeViewModel, Source={StaticResource Locator}}"
         WindowStyle="None"
-        MouseDown="Window_MouseDown">
+        ResizeMode="NoResize"
+        MouseLeftButtonDown="Window_MouseDown">
 
     <Window.Resources>
         <proxy:BindingProxy x:Key="Proxy" Data="{Binding}" />

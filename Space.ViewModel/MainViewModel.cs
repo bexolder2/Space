@@ -648,9 +648,9 @@ namespace Space.ViewModel
         }
         private void OnBuyCommandExecuted(object _)
         {
-            if (Player.Resources.CryptocurrencyValue - BuyModel.Price >= 0)
+            if (Player.Resources.CryptocurrencyValue - BuyModel.Price >= 0 && BuyModel.Value > 0)
             {
-                if (BuyModel.IsDelivery)
+                if (BuyModel.IsDelivery && BuyModel.Value >= 500)
                 {
                     BuyEnergy();
                 }
@@ -691,9 +691,9 @@ namespace Space.ViewModel
         {
             if (ValidatePositionForMarketAction())
             {
-                if (Player.Resources.OreValue - SellModel.Value >= 0)
+                if (Player.Resources.OreValue - SellModel.Value >= 0 && SellModel.Value > 0)
                 {
-                    Player.Resources.OreValue -= SellModel.Value;
+                    Player.Resources.OreValue -= (int)SellModel.Value;
                     Player.Resources.CryptocurrencyValue += SellModel.Price;
                 }
                 else
@@ -713,7 +713,7 @@ namespace Space.ViewModel
             }
             else
             {
-                MessageBox.Show("Нужно переместится на клетку со станцией чтоб продать руду.");
+                MessageBox.Show("Нужно переместится на клетку со станцией чтобы торговать.");
             }
 
             return result;
