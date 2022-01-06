@@ -8,12 +8,19 @@ namespace Space.Model.Modules
     public class Spaceship : BindableBase.BindableBase
     {
         private int hp;
+        private int maximumHP;
         private int damage;
         private int availablePowerReserve;
         private List<KeyValuePair<IBindableModel, Module>> shipModules;
         private Point currentCoordinates;
 
         #region properties
+        public int MaximumHP
+        {
+            get => maximumHP;
+            set => Set(ref maximumHP, value);
+        }
+
         public Point CurrentCoordinates
         {
             get => currentCoordinates;

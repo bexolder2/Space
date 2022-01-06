@@ -116,7 +116,7 @@ namespace Space.Infrastructure.Helpers
                     result += ((BaseModel)item.Key).HP;
                 }  
             }
-            spaceship.HP = result;
+            spaceship.MaximumHP = result;
 
             return result;
         }

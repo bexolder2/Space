@@ -49,6 +49,8 @@ namespace Space.ViewModel
         private MarketModel sellModel;
 
         private ConvertModel convertModel;
+        private Timer repairTimer;
+        private bool isRepairProcessed = false;
 
         public MainViewModel()
         {
@@ -342,6 +344,8 @@ namespace Space.ViewModel
                     Cells.Insert(0, cell);
                 }
             }
+            CalculateShipsHpAndDamage();
+            Player.Spaceship.HP = Player.Spaceship.MaximumHP;
         }
 
         public void CalculateShipParams(bool flag)
@@ -432,6 +436,32 @@ namespace Space.ViewModel
             return (int)((point2.X - point1.X) + 1 + (point2.Y - point1.Y));
         }
         #endregion
+
+        private int GetStorageCapacity()
+        {
+            int storageCapacity = 0;
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if (item.Value == Module.Storage)
+                {
+                    storageCapacity += ((Storage)item.Key).Limit;
+                }
+            }
+            return storageCapacity;
+        }
+
+        private int GetEnergyCapacity()
+        {
+            int energyCapacity = 0;
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if (item.Value == Module.Battery)
+                {
+                    energyCapacity += ((Battery)item.Key).Limit;
+                }
+            }
+            return energyCapacity;
+        }
 
         #region collect
         private bool CanCollectCommandExecute(object parameter)
@@ -541,10 +571,16 @@ namespace Space.ViewModel
             var spaceship = player.Spaceship;
             ShipPropertyCounter.CountDamageValue(ref spaceship);
             ShipPropertyCounter.CountHPValue(ref spaceship);
+            MaxPlayerHP = spaceship.MaximumHP;
 
-            var piratesSpaceship = pirate.Spaceship;
-            ShipPropertyCounter.CountDamageValue(ref piratesSpaceship);
-            ShipPropertyCounter.CountHPValue(ref piratesSpaceship);
+            if (pirate != null)
+            {
+                var piratesSpaceship = pirate.Spaceship;
+                ShipPropertyCounter.CountDamageValue(ref piratesSpaceship);
+                ShipPropertyCounter.CountHPValue(ref piratesSpaceship);
+                MaxPirateHP = piratesSpaceship.MaximumHP;
+                piratesSpaceship.HP = MaxPirateHP;
+            }
         }
         
         private bool CanStartBattleCommandExecute(object _) => true;
@@ -623,32 +659,6 @@ namespace Space.ViewModel
             DisableMainWindow?.Invoke(this, args);
         }
         #endregion
-
-        private int GetStorageCapacity()
-        {
-            int storageCapacity = 0;
-            foreach (var item in Player.Spaceship.ShipModules)
-            {
-                if (item.Value == Module.Storage)
-                {
-                    storageCapacity += ((Storage)item.Key).Limit;
-                }
-            }
-            return storageCapacity;
-        }
-
-        private int GetEnergyCapacity()
-        {
-            int energyCapacity = 0;
-            foreach (var item in Player.Spaceship.ShipModules)
-            {
-                if (item.Value == Module.Battery)
-                {
-                    energyCapacity += ((Battery)item.Key).Limit;
-                }
-            }
-            return energyCapacity;
-        }
 
         #region market
         private bool CanOpenMarketCommandExecute(object _) => true;
@@ -850,11 +860,39 @@ namespace Space.ViewModel
         }
         #endregion
 
+        #region repair
         private bool CanRepairCommandExecute(object _) => true;
         private void OnRepairCommandExecuted(object _)
         {
-
+            CalculateShipsHpAndDamage();
+            if (isRepairProcessed)
+            {
+                MessageBox.Show("Ремонт уже запущен.");
+            }
+            else
+            {
+                if (Player.Spaceship.HP < MaxPlayerHP)
+                {
+                    if (Player.Resources.EnergyValue - 10 > 0)
+                    {
+                        isRepairProcessed = true;
+                        repairTimer = new Timer(new TimerCallback(RepairProgress), null, (int)TimeSpan.FromMinutes(10).TotalMilliseconds, Timeout.Infinite);
+                        MessageBox.Show("Ремонт запущен он продлится 10 минут.");
+                    }
+                    else MessageBox.Show("Недостаточно денег для ремонта.");
+                }
+                else MessageBox.Show("Ремонт не нужен.");
+            }
         }
+
+        private void RepairProgress(object state)
+        {
+            isRepairProcessed = false;
+            CalculateShipsHpAndDamage();
+            Player.Spaceship.HP = MaxPlayerHP;
+            MessageBox.Show("Ремонт окончен.");
+        }
+        #endregion
 
         private bool CanGiveUpCommandExecute(object _) => true;
         private void OnGiveUpCommandExecuted(object _)
