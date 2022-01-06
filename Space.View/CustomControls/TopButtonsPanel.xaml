@@ -9,6 +9,26 @@
              x:Name="Root">
     <StackPanel Orientation="Horizontal">
         <Button Margin="5,0"
+                Command="{Binding RepairCommand}">
+            <Button.Content>
+                <TextBlock>
+                    <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Repair}"/>
+                    <Run Text="Repair"/>
+                </TextBlock>
+            </Button.Content>
+        </Button>
+
+        <Button Margin="5,0"
+                Command="{Binding OpenConvertCommand}">
+            <Button.Content>
+                <TextBlock>
+                    <Run FontFamily="Segoe MDL2 Assets" Text="{StaticResource Converter}"/>
+                    <Run Text="Convert resources"/>
+                </TextBlock>
+            </Button.Content>
+        </Button>
+
+        <Button Margin="5,0"
                 Command="{Binding OpenMarketCommand}">
             <Button.Content>
                 <TextBlock>

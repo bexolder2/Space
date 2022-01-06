@@ -5,6 +5,7 @@
         FightWindow,
         MainWindow,
         UpgradeWindow,
-        MarketWindow
+        MarketWindow,
+        ConvertWindow
     }
 }

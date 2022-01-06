@@ -36,8 +36,9 @@ namespace Space.ViewModel
 
         public event EventHandler<EventArgs> NavigateToFightWindow;
         public event EventHandler<EventArgs> NavigateToMarketWindow;
+        public event EventHandler<EventArgs> NavigateToConvertWindow;
         public event EventHandler<EventArgs> CloseFightWindow;
-        public event EventHandler<EventArgs> DisableMainWindow;
+        public event EventHandler<EventArgs> DisableMainWindow;  
 
         private ShipConfigurator configurator;
         private BattlleLogger logger;
@@ -46,6 +47,8 @@ namespace Space.ViewModel
 
         private MarketModel buyModel;
         private MarketModel sellModel;
+
+        private ConvertModel convertModel;
 
         public MainViewModel()
         {
@@ -60,6 +63,9 @@ namespace Space.ViewModel
             OpenMarketCommand = new RelayCommand(OnOpenMarketCommandExecuted, CanOpenMarketCommandExecute);
             BuyCommand = new RelayCommand(OnBuyCommandExecuted, CanBuyCommandExecute);
             SellCommand = new RelayCommand(OnSellCommandExecuted, CanSellCommandExecute);
+            ConvertCommand = new RelayCommand(OnConvertCommandExecuted, CanConvertCommandExecute);
+            RepairCommand = new RelayCommand(OnRepairCommandExecuted, CanRepairCommandExecute);
+            OpenConvertCommand = new RelayCommand(OnOpenConvertCommandExecuted, CanOpenConvertCommandExecute);
             #endregion
 
             InitializeEmptyPoints();
@@ -78,6 +84,7 @@ namespace Space.ViewModel
 
             BuyModel = new MarketModel();
             SellModel = new MarketModel();
+            ConvertModel = new ConvertModel();
         }
 
         #region commands
@@ -89,9 +96,18 @@ namespace Space.ViewModel
         public ICommand OpenMarketCommand { get; private set; }
         public ICommand BuyCommand { get; private set; }
         public ICommand SellCommand { get; private set; }
+        public ICommand ConvertCommand { get; private set; }
+        public ICommand RepairCommand { get; private set; }
+        public ICommand OpenConvertCommand { get; private set; }
         #endregion
 
         #region properties
+        public ConvertModel ConvertModel
+        {
+            get => convertModel;
+            set => Set(ref convertModel, value);
+        }
+
         public MarketModel BuyModel
         {
             get => buyModel;
@@ -512,7 +528,9 @@ namespace Space.ViewModel
             }
             return result;
         }
+        #endregion
 
+        #region battle
         public void OnNavigateToFightWindow(EventArgs args)
         {
             NavigateToFightWindow?.Invoke(this, args);
@@ -528,9 +546,7 @@ namespace Space.ViewModel
             ShipPropertyCounter.CountDamageValue(ref piratesSpaceship);
             ShipPropertyCounter.CountHPValue(ref piratesSpaceship);
         }
-        #endregion
-
-        #region battle
+        
         private bool CanStartBattleCommandExecute(object _) => true;
         private void OnStartBattleCommandExecuted(object _)
         {
@@ -573,7 +589,18 @@ namespace Space.ViewModel
             {
                 MessageBox.Show("You are win :)");
                 OnCloseFightWindow(null);
-                Player.Resources.OreValue += 1000; //TODO: validate ore (storage limitation)
+
+                int storageCapacity = GetStorageCapacity();
+
+                if(storageCapacity - Player.Resources.OreValue >= 1000)
+                {
+                    Player.Resources.OreValue += 1000;
+                }
+                else
+                {
+                    Player.Resources.OreValue += storageCapacity - Player.Resources.OreValue;
+                    MessageBox.Show("Склад заполнен.");
+                }
                 Player.Resources.EnergyValue += 100;
 
                 winCounter++;
@@ -596,6 +623,32 @@ namespace Space.ViewModel
             DisableMainWindow?.Invoke(this, args);
         }
         #endregion
+
+        private int GetStorageCapacity()
+        {
+            int storageCapacity = 0;
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if (item.Value == Module.Storage)
+                {
+                    storageCapacity += ((Storage)item.Key).Limit;
+                }
+            }
+            return storageCapacity;
+        }
+
+        private int GetEnergyCapacity()
+        {
+            int energyCapacity = 0;
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if (item.Value == Module.Battery)
+                {
+                    energyCapacity += ((Battery)item.Key).Limit;
+                }
+            }
+            return energyCapacity;
+        }
 
         #region market
         private bool CanOpenMarketCommandExecute(object _) => true;
@@ -725,6 +778,83 @@ namespace Space.ViewModel
             Player.Resources.EnergyValue += BuyModel.Value;
         }
         #endregion
+
+        #region convert
+        private bool CanOpenConvertCommandExecute(object _) => true;
+        private void OnOpenConvertCommandExecuted(object _)
+        {
+            OnNavigateToConvertWindow(null);
+        }
+
+        private bool CanConvertCommandExecute(object _)
+        {
+            List<KeyValuePair<IBindableModel, Module>> converters = new List<KeyValuePair<IBindableModel, Module>>();
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if(item.Value == Module.Converter)
+                {
+                    converters.Add(item);
+                }
+            }
+
+            if (converters.Count > 0)
+            {
+                var converter = converters.Max(x => ((BaseModel)x.Key).Level);
+                ConvertModel.OreValue = ConvertModel.EnergyValue * (5 - (uint)converter);
+            }      
+
+            return true;
+        }
+        private void OnConvertCommandExecuted(object _)
+        {
+            KeyValuePair<IBindableModel, Module> converter = new KeyValuePair<IBindableModel, Module>();
+            foreach (var item in Player.Spaceship.ShipModules)
+            {
+                if (item.Value == Module.Converter)
+                {
+                    converter = item;
+                }
+            }
+
+            if (Player.Spaceship.ShipModules.Where(x => x.Value == Module.Converter).Any())
+            {
+                if (ConvertModel.EnergyValue > 0)
+                {
+                    if (Player.Resources.EnergyValue + ConvertModel.EnergyValue < GetEnergyCapacity())
+                    {
+                        if (Player.Resources.OreValue > 0 && Player.Resources.OreValue - ConvertModel.OreValue > 0)
+                        {
+                            Player.Resources.EnergyValue += ConvertModel.EnergyValue;
+                            Player.Resources.OreValue -= (int)ConvertModel.OreValue;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Недостаточно руды.");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Недостаточно места для энергии, усовершенствуйте аккумулятор.");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Нужно купить конвертер чтобы конвертировать руду.");
+            }
+        }
+
+        public void OnNavigateToConvertWindow(EventArgs args)
+        {
+            NavigateToConvertWindow?.Invoke(this, args);
+        }
+        #endregion
+
+        private bool CanRepairCommandExecute(object _) => true;
+        private void OnRepairCommandExecuted(object _)
+        {
+
+        }
 
         private bool CanGiveUpCommandExecute(object _) => true;
         private void OnGiveUpCommandExecuted(object _)

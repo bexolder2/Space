@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BindableBase\BindableBase.cs" />
     <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Entities\ConvertModel.cs" />
     <Compile Include="Entities\MarketModel.cs" />
     <Compile Include="Enums\Action.cs" />
     <Compile Include="Enums\CellType.cs" />

@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConvertWindow.xaml.cs">
+      <DependentUpon>ConvertWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FightWindow.xaml.cs">
       <DependentUpon>FightWindow.xaml</DependentUpon>
     </Compile>
@@ -83,6 +86,10 @@
     <Compile Include="UpgradeWindow.xaml.cs">
       <DependentUpon>UpgradeWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="ConvertWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CustomControls\ResourcePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -9,11 +9,13 @@ namespace Space.View.Services
     {
         private FightWindow FightWnd;
         private MarketWindow MarketWnd;
+        private ConvertWindow ConvertWnd;
 
         public WindowService()
         {
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToFightWindow += NavigateToFight;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToMarketWindow += NavigateToMarket;
+            (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToConvertWindow += NavigateToConvert;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.CloseFightWindow += OnCloseFightWindow;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.DisableMainWindow += OnDisableMainWindow;
         }
@@ -34,6 +36,10 @@ namespace Space.View.Services
                     break;
                 case WindowType.UpgradeWindow:
                     break;
+                case WindowType.ConvertWindow:
+                    ConvertWnd = new ConvertWindow();
+                    ConvertWnd.ShowDialog();
+                    break;
             }
         }
 
@@ -51,6 +57,11 @@ namespace Space.View.Services
                 case WindowType.MarketWindow:
                     break;
                 case WindowType.UpgradeWindow:
+                    break;
+                case WindowType.ConvertWindow:
+                    Application.Current.Dispatcher.Invoke(() => {
+                        ConvertWnd.Close();
+                    });
                     break;
             }
         }
@@ -70,6 +81,8 @@ namespace Space.View.Services
                     break;
                 case WindowType.UpgradeWindow:
                     break;
+                case WindowType.ConvertWindow:
+                    break;
             }
         }
 
@@ -83,9 +96,19 @@ namespace Space.View.Services
             ShowWindow(WindowType.MarketWindow);
         }
 
+        public void ShowConvertWnd()
+        {
+            ShowWindow(WindowType.ConvertWindow);
+        }
+
         public void CloseFightWnd()
         {
             CloseWindow(WindowType.FightWindow);
+        }
+
+        public void CloseConvertWnd()
+        {
+            CloseWindow(WindowType.ConvertWindow);
         }
 
         public void DisableMainWindow()
@@ -103,9 +126,19 @@ namespace Space.View.Services
             ShowMarketWnd();
         }
 
+        private void NavigateToConvert(object sender, System.EventArgs e)
+        {
+            ShowConvertWnd();
+        }
+
         private void OnCloseFightWindow(object sender, System.EventArgs e)
         {
             CloseFightWnd();
+        }
+
+        private void OnCloseConvertWindow(object sender, System.EventArgs e)
+        {
+            CloseConvertWnd();
         }
 
         private void OnDisableMainWindow(object sender, System.EventArgs e)
