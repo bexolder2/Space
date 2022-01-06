@@ -618,8 +618,13 @@ namespace Space.ViewModel
         private void OnBuyCommandExecuted(object p)
         {
             var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
+            List<KeyValuePair<IBindableModel, Module>> buyBufferCopy = new List<KeyValuePair<IBindableModel, Module>>();
+            foreach (var item in buyBuffer)
+            {
+                buyBufferCopy.Add(item);
+            }
 
-            foreach (var module in buyBuffer)
+            foreach (var module in buyBufferCopy)
             {
                 if (module.Value == Module.Body)
                 {
@@ -670,26 +675,23 @@ namespace Space.ViewModel
 
         private void Buy(Player player, KeyValuePair<IBindableModel, Module> module)
         {
+            KeyValuePair<IBindableModel, Module> newModule = new KeyValuePair<IBindableModel, Module>();
             if (((BaseModel)module.Key).Level == Level.First)
             {
-                player.Resources.CryptocurrencyValue -= ((BaseModel)module.Key).Price;
-                Bodies.Clear();
+                newModule = module;
             }
             else
             {
                 var currentlySelectedModule = Modules.Where(item => item.Value == module.Value)
                                                      .ToDictionary(_key => _key.Key, _value => _value.Value);
-                int index1 = buyBuffer.IndexOf(module);
-                int index2 = PlayersShipModules.IndexOf(module);
-                buyBuffer.Remove(module);
-                PlayersShipModules.Remove(module);
-                var newModule = currentlySelectedModule.FirstOrDefault();
-                buyBuffer.Insert(index1, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
-                PlayersShipModules.Insert(index2, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
-
-                player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
-                Bodies.Clear();
+                newModule = currentlySelectedModule.FirstOrDefault();   
             }
+            int index = PlayersShipModules.IndexOf(module);
+            buyBuffer.Remove(module);
+            PlayersShipModules.Remove(module);
+            PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
+            player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
+
             MessageBox.Show($"Модуль {module.Value} куплен");
         }
         #endregion
