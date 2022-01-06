@@ -600,7 +600,12 @@ namespace Space.ViewModel
                 if(startIndex >= 0 && finishIndex >= 0)
                 {
                     SwapItems(startIndex, finishIndex);
-                    startIndex = finishIndex = -1;
+                    if (!ValidateLocation(finishIndex))
+                    {
+                        SwapItems(startIndex, finishIndex);
+                        startIndex = finishIndex = -1;
+                        MessageBox.Show("Неприемлемое размещение модуля.");
+                    }
                 }
             }
         }
