@@ -484,12 +484,6 @@
                     Height="20"
                     Width="60"
                     Command="{Binding BuyCommand}"/>
-            <Button Content="Upgrade Body"
-                    Margin="10,0,0,0"
-                    Height="20"
-                    Width="100"
-                    Command="{Binding UpgradeCommand}"
-                    CommandParameter="body"/>
             <Button Content="Upgrade"
                     Margin="10,0,20,0"
                     Height="20"

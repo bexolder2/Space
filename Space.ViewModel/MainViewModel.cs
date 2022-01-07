@@ -33,12 +33,14 @@ namespace Space.ViewModel
         private int maxPirateHP;
         private Point startCoordinates;
         private int winCounter = 0;
+        private int numberOfEnergyForWinValidation;
 
         public event EventHandler<EventArgs> NavigateToFightWindow;
         public event EventHandler<EventArgs> NavigateToMarketWindow;
         public event EventHandler<EventArgs> NavigateToConvertWindow;
+        public event EventHandler<EventArgs> NavigateToUpgradeWindow;
         public event EventHandler<EventArgs> CloseFightWindow;
-        public event EventHandler<EventArgs> DisableMainWindow;  
+        public event EventHandler<EventArgs> DisableMainWindow;   
 
         private ShipConfigurator configurator;
         private BattlleLogger logger;
@@ -57,7 +59,7 @@ namespace Space.ViewModel
             Cells = new ObservableCollection<Cell>();
 
             #region command initialization
-            GiveUpCommand = new RelayCommand(OnGiveUpCommandExecuted, CanGiveUpCommandExecute);
+            GiveUpCommand = new RelayCommand(OnGiveUpCommandExecuted, (object _) => true);
             MoveCommand = new RelayCommand(OnMoveCommandExecuted, CanMoveCommandExecute);
             NewPositionClickCommand = new RelayCommand(OnNewPositionClickCommandExecuted, CanNewPositionClickCommandExecute);
             CollectCommand = new RelayCommand(OnCollectCommandExecuted, CanCollectCommandExecute);
@@ -68,13 +70,15 @@ namespace Space.ViewModel
             ConvertCommand = new RelayCommand(OnConvertCommandExecuted, CanConvertCommandExecute);
             RepairCommand = new RelayCommand(OnRepairCommandExecuted, CanRepairCommandExecute);
             OpenConvertCommand = new RelayCommand(OnOpenConvertCommandExecuted, CanOpenConvertCommandExecute);
+            InfoCommand = new RelayCommand(OnInfoCommandExecuted, (object _) => true);
+            OpenUpgradeCommand = new RelayCommand(OnOpenUpgradeCommandExecuted, (object _) => true);
             #endregion
 
             InitializeEmptyPoints();
             InitializeStation();
             InitializeMoons();
             InitializePlayer();
-            InitializeTestData();
+            //InitializeTestData();
 
             Messenger.Default.Register<List<KeyValuePair<IBindableModel, Module>>>(this, UpdateShipModules);
             Messenger.Default.Register<bool>(this, CalculateShipParams);
@@ -101,9 +105,24 @@ namespace Space.ViewModel
         public ICommand ConvertCommand { get; private set; }
         public ICommand RepairCommand { get; private set; }
         public ICommand OpenConvertCommand { get; private set; }
+        public ICommand InfoCommand { get; private set; }
+        public ICommand OpenUpgradeCommand { get; private set; }
         #endregion
 
         #region properties
+        public int NumberOfEnergyForWinValidation
+        {
+            get => numberOfEnergyForWinValidation;
+            set
+            {
+                Set(ref numberOfEnergyForWinValidation, value);
+                if(numberOfEnergyForWinValidation <= 0)
+                {
+
+                }
+            }
+        }
+
         public ConvertModel ConvertModel
         {
             get => convertModel;
@@ -186,7 +205,7 @@ namespace Space.ViewModel
                 Name = planet1.ToString(),
                 Coordinates = new CoordinateGenerator().Generate(ConvertCellsToPoints())
             };
-            int index1 = (int)(pl1.Coordinates.X * numberRowsOrColumns + pl1.Coordinates.Y);
+            int index1 = (int)(pl1.Coordinates.Y * numberRowsOrColumns + pl1.Coordinates.X);
             Cells.RemoveAt(index1);
             Cells.Insert(index1, pl1);
 
@@ -196,7 +215,7 @@ namespace Space.ViewModel
                 Name = planet2.ToString(),
                 Coordinates = new CoordinateGenerator().Generate(ConvertCellsToPoints())
             };
-            int index2 = (int)(pl2.Coordinates.X * numberRowsOrColumns + pl2.Coordinates.Y);
+            int index2 = (int)(pl2.Coordinates.Y * numberRowsOrColumns + pl2.Coordinates.X);
             Cells.RemoveAt(index2);
             Cells.Insert(index2, pl2);
         }
@@ -241,6 +260,11 @@ namespace Space.ViewModel
                 OreValue = 0
             };
 
+            Player.Resources.EnergyValueChanged += UpdateEnergyValue;
+            Player.Spaceship.ShipModules = Constants.BaseComplectation;
+            UpdateShipModules(Player.Spaceship.ShipModules);
+            CalculateShipParams(true);
+
             #region test data
             Player.Spaceship.ShipModules = new List<KeyValuePair<IBindableModel, Module>>();
             //Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new CommandCenter { BodyLimit = 4, HP = 10, Level = Level.First }, Module.CommandCenter));
@@ -259,6 +283,16 @@ namespace Space.ViewModel
             //Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.Second }, Module.Body));
             //Player.Spaceship.ShipModules.Add(new KeyValuePair<IBindableModel, Module>(new Body { HP = 100, Level = Level.Second }, Module.Body));
             #endregion
+        }
+
+        private void UpdateEnergyValue(object sender, double energy)
+        {
+            if (energy == 0 && 
+                Player.Spaceship.ShipModules.First(x => x.Value == Module.Converter).Key == null &&
+                Player.Resources.CryptocurrencyValue < 0.4)
+            {
+                GiveUpCommand.Execute(null);
+            }
         }
 
         private void InitializeTestData()
@@ -326,6 +360,9 @@ namespace Space.ViewModel
             };
             asteroid.Asteroid.Coordinates = asteroid.Coordinates; 
             asteroid.Name = asteroid.Asteroid.Name;
+            Application.Current.Dispatcher.Invoke(() => {
+                Cells.Insert((int)(asteroid.Coordinates.Y * numberRowsOrColumns + asteroid.Coordinates.X), asteroid);
+            });
         }
 
         public void UpdateShipModules(List<KeyValuePair<IBindableModel, Module>> newModules)
@@ -617,7 +654,7 @@ namespace Space.ViewModel
         {
             if (player.Spaceship.HP <= 0)
             {
-                MessageBox.Show("You are lose :(\nTry again.");
+                MessageBox.Show("You lost :(\nTry again.");
                 OnCloseFightWindow(null);
                 OnDisableMainWindow(null);
             }
@@ -647,6 +684,7 @@ namespace Space.ViewModel
                     CreateAsteroid();
                 }
             }
+            LogText = string.Empty;
         }
 
         public void OnCloseFightWindow(EventArgs args)
@@ -861,7 +899,13 @@ namespace Space.ViewModel
         #endregion
 
         #region repair
-        private bool CanRepairCommandExecute(object _) => true;
+        private bool CanRepairCommandExecute(object _)
+        {
+            bool result = true;
+            if (Player.Spaceship.HP < MaxPlayerHP)
+                result = false;
+            return result;
+        }
         private void OnRepairCommandExecuted(object _)
         {
             CalculateShipsHpAndDamage();
@@ -871,17 +915,13 @@ namespace Space.ViewModel
             }
             else
             {
-                if (Player.Spaceship.HP < MaxPlayerHP)
+                if (Player.Resources.EnergyValue - 10 > 0)
                 {
-                    if (Player.Resources.EnergyValue - 10 > 0)
-                    {
-                        isRepairProcessed = true;
-                        repairTimer = new Timer(new TimerCallback(RepairProgress), null, (int)TimeSpan.FromMinutes(10).TotalMilliseconds, Timeout.Infinite);
-                        MessageBox.Show("Ремонт запущен он продлится 10 минут.");
-                    }
-                    else MessageBox.Show("Недостаточно денег для ремонта.");
+                    isRepairProcessed = true; //(int)TimeSpan.FromMinutes(10).TotalMilliseconds
+                    repairTimer = new Timer(new TimerCallback(RepairProgress), null, 1000, Timeout.Infinite);
+                    MessageBox.Show("Ремонт запущен он продлится 10 минут.");
                 }
-                else MessageBox.Show("Ремонт не нужен.");
+                else MessageBox.Show("Недостаточно денег для ремонта.");
             }
         }
 
@@ -894,11 +934,36 @@ namespace Space.ViewModel
         }
         #endregion
 
-        private bool CanGiveUpCommandExecute(object _) => true;
         private void OnGiveUpCommandExecuted(object _)
         {
-            MessageBox.Show("You are lose :(\nTry again.");
+            MessageBox.Show("You lost :(\nTry again.");
             OnDisableMainWindow(null);
         }
+
+        private void OnInfoCommandExecuted(object _)
+        {
+            MessageBox.Show("Чтобы перемещать корабль нужно нажать правой кнопкой по кораблю, " +
+                            "выбрать Move и потом двойным кликом на место назначания. " +
+                            "Для сбора ресурсов нажать правой кнопкой на корабль и выбрать Collect.\n\n" +
+                            "В окне с улучшениями можно двигать модули по тому же принципу что и корабль. " +
+                            "Для улучшения модуля нужно выбрать модуль слева и нажать Upgrade, " +
+                            "для покупки нового модуля выбираем его тип в комбо боксе, потом выбираем уровень ниже," +
+                            "нажимаем Locate для размещения модуля на корабле (Undo locate для отмены последнего размещения. " +
+                            "В буффере только 1 модуль!!!) и жмем Buy для покупки. Можно переместить модуль по желанию.\n\n" +
+                            "Для открытия окна справки нажми на иконку информации на главном окне.\n" +
+                            "Приятного пользования программой :)\n");
+        }
+
+        #region open upgrade
+        private void OnOpenUpgradeCommandExecuted(object _)
+        {
+            OnNavigateToUpgradeWindow(null);
+        }
+
+        public void OnNavigateToUpgradeWindow(EventArgs args)
+        {
+            NavigateToUpgradeWindow?.Invoke(this, null);
+        }
+        #endregion
     }
 }

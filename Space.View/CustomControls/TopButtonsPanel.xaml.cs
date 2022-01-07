@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 
 namespace Space.View.CustomControls
 {
@@ -10,11 +7,6 @@ namespace Space.View.CustomControls
         public TopButtonsPanel()
         {
             InitializeComponent();   
-        }
-
-        private void OpenUpgradeWnd(object sender, RoutedEventArgs e)
-        {
-            var upgradeWnd = new UpgradeWindow();
         }
     }
 }

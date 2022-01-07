@@ -43,12 +43,10 @@ namespace Space.ViewModel
 
             modules = new Dictionary<IBindableModel, Module>();
             PlayersShipModules = new List<KeyValuePair<IBindableModel, Module>>();
-            IsFirstLaunch = true;
             buyBuffer = new List<KeyValuePair<IBindableModel, Module>>();
 
             Initialize();
             InitializeSelectedModules();
-            InitializeShip();
         }
 
         #region commands
@@ -60,8 +58,6 @@ namespace Space.ViewModel
         #endregion
 
         #region properties
-        public bool IsFirstLaunch { get; set; }
-
         public List<KeyValuePair<IBindableModel, Module>> Bodies
         {
             get => bodies;
@@ -164,10 +160,6 @@ namespace Space.ViewModel
             if (spaceship == null || spaceship.Count == 0)
             {
                 PlayersShipModules = Constants.BaseComplectation;
-                foreach(var item in PlayersShipModules)
-                {
-                    player.Resources.CryptocurrencyValue -= ((BaseModel)item.Key).Price;
-                }
             }
             else
             {
@@ -310,7 +302,7 @@ namespace Space.ViewModel
             bool result = true;
             List<bool> compatibilities = new List<bool>();
 
-            if (PlayersShipModules.Count > index)
+            if (index >= 0 && PlayersShipModules.Count > index)
             {
                 if (index == 0)
                 {
@@ -448,35 +440,46 @@ namespace Space.ViewModel
         }
         #endregion
 
-        private bool CanUpgradeCommandExecute(object _)
+        private bool CanUpgradeCommandExecute(object parameter)
         {
             bool result = false;
-            if (selectedModule.Key != null)
+            if (parameter != null && parameter.ToString() == "body")
             {
-                if (selectedModuleIndex >= 0)
+                result = true;
+            }
+            else
+            {
+                if (selectedModule.Key != null)
                 {
-                    if (((BaseModel)PlayersShipModules[selectedModuleIndex].Key).Level != Level.Third)
+                    if (selectedModuleIndex >= 0)
                     {
-                        result = true;
+                        if (((BaseModel)PlayersShipModules[selectedModuleIndex].Key).Level != Level.Third)
+                        {
+                            result = true;
+                        }
                     }
-                }                
+                }
             }
             return result;
         }
-        private void OnUpgradeCommandExecuted(object parameter)
+        private void OnUpgradeCommandExecuted(object _)
         {
-            var selected = PlayersShipModules[selectedModuleIndex];
+            KeyValuePair<IBindableModel, Module> selected = new KeyValuePair<IBindableModel, Module>();
+            if (selectedModuleIndex >= 0)
+            {
+                selected = PlayersShipModules[selectedModuleIndex];
+            }
             if (selected.Key != null)
             {
                 KeyValuePair<IBindableModel, Module> newModule = new KeyValuePair<IBindableModel, Module>();
                 KeyValuePair<IBindableModel, Module> body = new KeyValuePair<IBindableModel, Module>();
 
-                if (parameter != null && parameter.ToString() == "body")
+                if (selected.Value == Module.EmptyBody)
                 {
-                    if(Bodies.Count > 0)
+                    if (Bodies.Count > 0)
                     {
                         body = Bodies.First(x => ((BaseModel)x.Key).Level != Level.Third);
-                        if(body.Key != null)
+                        if (body.Key != null)
                         {
                             switch (((BaseModel)body.Key).Level)
                             {
@@ -488,7 +491,7 @@ namespace Space.ViewModel
                                     break;
                             }
                         }
-                    }  
+                    }
                 }
                 else
                 {
@@ -501,34 +504,34 @@ namespace Space.ViewModel
                             newModule = Modules.FirstOrDefault(x => ((BaseModel)x.Key).Level == Level.Third && x.Value == selected.Value);
                             break;
                     }
-                }   
+                }
 
                 if (ValidationByPrice(newModule))
                 {
                     var player = (Application.Current.Resources["Locator"] as ViewModelLocator)?.MainViewModel?.Player;
-                    player.Resources.CryptocurrencyValue -= ((BaseModel)selected.Key).Price;
 
-                    if (parameter != null && parameter.ToString() == "body")
+                    if (selected.Value == Module.EmptyBody)
                     {
-                        int index = Bodies.IndexOf(body);
+                        var localBodies = Modules.Where(x => x.Value == Module.Body).ToList(); //list of bodies 1-2-3 lvl
+                        var localBody = localBodies.FirstOrDefault(x => ((BaseModel)x.Key).Level == ((BaseModel)body.Key).Level).Key; //necessary body
+                        player.Resources.CryptocurrencyValue -= ((BaseModel)localBody).Price; //price for neccessary lvl
+                        int index = Bodies.IndexOf(body); //replace body
                         Bodies.RemoveAt(index);
                         Bodies.Insert(index, newModule);
                     }
                     else
                     {
+                        player.Resources.CryptocurrencyValue -= ((BaseModel)selected.Key).Price;
                         int index = PlayersShipModules.IndexOf(selected);
                         PlayersShipModules.RemoveAt(index);
                         PlayersShipModules.Insert(index, newModule);
-                    } 
-                    
+                    }
+
                     Messenger.Default.Send(true);
-                    MessageBox.Show($"Модуль {newModule.Value} улучшен");
+                    MessageBox.Show($"Модуль {newModule.Value} улучшен до {(int)((BaseModel)newModule.Key).Level + 1} уровня.");
                     CheckWin();
                 }
-                else
-                {
-                    MessageBox.Show($"Недостаточно крипты для улучшения");
-                }
+                else MessageBox.Show($"Недостаточно крипты для улучшения");
             }
         }
 
@@ -572,7 +575,12 @@ namespace Space.ViewModel
             {
                 PlayersShipModules.Add(item);
             }
-            var result = PlayersShipModules.Except(buyBuffer).ToList();
+            List<KeyValuePair<IBindableModel, Module>> result = new List<KeyValuePair<IBindableModel, Module>>();
+            if (buyBuffer.Count > 0)
+            {
+                result = PlayersShipModules.Except(buyBuffer).ToList();
+            }
+            else result = PlayersShipModules;
 
             Messenger.Default.Send(result);
             Messenger.Default.Send(true);
@@ -691,12 +699,22 @@ namespace Space.ViewModel
                                                      .ToDictionary(_key => _key.Key, _value => _value.Value);
                 newModule = currentlySelectedModule.FirstOrDefault();   
             }
-            int index = PlayersShipModules.IndexOf(module);
-            buyBuffer.Remove(module);
-            PlayersShipModules.Remove(module);
-            PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
-            player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
 
+            if (module.Value == Module.Body)
+            {
+                buyBuffer.Remove(module);
+                PlayersShipModules.Remove(module);
+                player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
+            }
+            else
+            {
+                int index = PlayersShipModules.IndexOf(module);
+                buyBuffer.Remove(module);
+                PlayersShipModules.Remove(module);
+                PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(newModule.Key, newModule.Value));
+                player.Resources.CryptocurrencyValue -= ((BaseModel)newModule.Key).Price;
+            }
+               
             MessageBox.Show($"Модуль {module.Value} куплен");
         }
         #endregion
@@ -725,28 +743,16 @@ namespace Space.ViewModel
             }
             else
             {
-                int counter = -1;
-                int index = -1;
-                foreach (var item in PlayersShipModules)
-                {
-                    if (item.Value != Module.EmptyBody)
-                    {
-                        counter++;
-                    }
-                    else
-                    {
-                        if (counter == -1)
-                        {
-                            counter++;
-                        }
-                        index = counter;
-                    }
-                }
+                int index = PlayersShipModules.IndexOf(PlayersShipModules.FirstOrDefault(x => x.Value == Module.EmptyBody));
                 if (index >= 0)
                 {
-                    lastEmptyBody = (EmptyBody)PlayersShipModules[index + 1].Key;
-                    PlayersShipModules[index + 1] = selectedLevel;
-                    buyBuffer.Add(selectedLevel);
+                    if (PlayersShipModules[index].Value == Module.EmptyBody)
+                    {
+                        lastEmptyBody = (EmptyBody)PlayersShipModules[index].Key;
+                        PlayersShipModules[index] = selectedLevel;
+                        buyBuffer.Add(selectedLevel);
+                    }
+                    else MessageBox.Show("Выберите модификацию первого уровня.");
                 }
             }
         }

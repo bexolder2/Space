@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Space.Model.Modules
 {
@@ -7,6 +8,7 @@ namespace Space.Model.Modules
         private double cryptocurrencyValue;
         private double energyValue;
         private int oreValue;
+        public event EventHandler<double> EnergyValueChanged;
 
         #region properties
         public double CryptocurrencyValue
@@ -25,7 +27,11 @@ namespace Space.Model.Modules
         public double EnergyValue
         {
             get => energyValue;
-            set => Set(ref energyValue, value);
+            set
+            {
+                Set(ref energyValue, value);
+                EnergyValueChanged?.Invoke(this, value);
+            }
         }
 
         public int OreValue

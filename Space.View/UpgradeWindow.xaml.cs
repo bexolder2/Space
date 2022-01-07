@@ -10,28 +10,28 @@ namespace Space.View
         public UpgradeWindow()
         {
             InitializeComponent();
-            SetWindowState(WndAction.Show);
+            (DataContext as UpgradeViewModel).InitializeShip();
         }
 
-        private void SetWindowState(WndAction action)
-        {
-            switch (action)
-            {
-                case WndAction.Hide:
-                    Hide();
-                    (DataContext as UpgradeViewModel).IsFirstLaunch = false;
-                    break;
-                case WndAction.Show:
-                    if (!(DataContext as UpgradeViewModel).IsFirstLaunch)
-                    {
-                        (DataContext as UpgradeViewModel).InitializeShip();
-                    }
-                    Show();
-                    break;
-                default:
-                    break;
-            }
-        }
+        //private void SetWindowState(WndAction action)
+        //{
+        //    switch (action)
+        //    {
+        //        case WndAction.Hide:
+        //            Hide();
+        //            (DataContext as UpgradeViewModel).IsFirstLaunch = false;
+        //            break;
+        //        case WndAction.Show:
+        //            if (!(DataContext as UpgradeViewModel).IsFirstLaunch)
+        //            {
+        //                (DataContext as UpgradeViewModel).InitializeShip();
+        //            }
+        //            Show();
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -46,12 +46,12 @@ namespace Space.View
 
         private void CloseClick(object sender, RoutedEventArgs e)
         {
-            SetWindowState(WndAction.Hide);
+            Close();
         }
 
         private void UpdateClick(object sender, RoutedEventArgs e)
         {
-            (DataContext as UpgradeViewModel).UpgradeCommand.Execute(levels.SelectedItem);
+            (DataContext as UpgradeViewModel).UpgradeCommand.Execute(null);
             ship.Items.Refresh();
         }
 

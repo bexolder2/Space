@@ -306,6 +306,16 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Left"/>
 
+        <Button Grid.Row="1"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                FontFamily="Segoe MDL2 Assets"
+                Content="{StaticResource Info}"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding InfoCommand}"/>
+
         <ListView x:Name="map"
                   Grid.Row="2"
                   ItemsSource="{Binding Cells, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"

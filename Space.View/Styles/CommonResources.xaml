@@ -13,4 +13,5 @@
     <clr:String x:Key="Market">&#xE8C7;</clr:String>
     <clr:String x:Key="Repair">&#xE15E;</clr:String>
     <clr:String x:Key="Converter">&#xE16E;</clr:String>
+    <clr:String x:Key="Info">&#xE946;</clr:String>
 </ResourceDictionary>

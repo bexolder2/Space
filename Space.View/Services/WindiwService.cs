@@ -10,6 +10,7 @@ namespace Space.View.Services
         private FightWindow FightWnd;
         private MarketWindow MarketWnd;
         private ConvertWindow ConvertWnd;
+        private UpgradeWindow UpgradeWnd;
 
         public WindowService()
         {
@@ -18,7 +19,8 @@ namespace Space.View.Services
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToConvertWindow += NavigateToConvert;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.CloseFightWindow += OnCloseFightWindow;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.DisableMainWindow += OnDisableMainWindow;
-        }
+            (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToUpgradeWindow += NavigateToUpgrade;
+        } 
 
         public void ShowWindow(WindowType type)
         {
@@ -35,6 +37,8 @@ namespace Space.View.Services
                     MarketWnd.ShowDialog();
                     break;
                 case WindowType.UpgradeWindow:
+                    UpgradeWnd = new UpgradeWindow();
+                    UpgradeWnd.ShowDialog();
                     break;
                 case WindowType.ConvertWindow:
                     ConvertWnd = new ConvertWindow();
@@ -86,6 +90,7 @@ namespace Space.View.Services
             }
         }
 
+        #region navigate
         public void ShowFightWnd()
         {
             ShowWindow(WindowType.FightWindow);
@@ -101,19 +106,9 @@ namespace Space.View.Services
             ShowWindow(WindowType.ConvertWindow);
         }
 
-        public void CloseFightWnd()
+        public void ShowUpgradeWnd()
         {
-            CloseWindow(WindowType.FightWindow);
-        }
-
-        public void CloseConvertWnd()
-        {
-            CloseWindow(WindowType.ConvertWindow);
-        }
-
-        public void DisableMainWindow()
-        {
-            LockWindow(WindowType.MainWindow);
+            ShowWindow(WindowType.UpgradeWindow);
         }
 
         private void NavigateToFight(object sender, System.EventArgs e)
@@ -131,6 +126,13 @@ namespace Space.View.Services
             ShowConvertWnd();
         }
 
+        private void NavigateToUpgrade(object sender, System.EventArgs e)
+        {
+            ShowUpgradeWnd();
+        }
+        #endregion
+
+        #region close
         private void OnCloseFightWindow(object sender, System.EventArgs e)
         {
             CloseFightWnd();
@@ -141,9 +143,25 @@ namespace Space.View.Services
             CloseConvertWnd();
         }
 
+        public void CloseFightWnd()
+        {
+            CloseWindow(WindowType.FightWindow);
+        }
+
+        public void CloseConvertWnd()
+        {
+            CloseWindow(WindowType.ConvertWindow);
+        }
+        #endregion
+
+        public void DisableMainWindow()
+        {
+            LockWindow(WindowType.MainWindow);
+        }
+
         private void OnDisableMainWindow(object sender, System.EventArgs e)
         {
             DisableMainWindow();
-        }
+        }  
     }
 }
