@@ -660,7 +660,7 @@ namespace Space.ViewModel
             }
             else
             {
-                MessageBox.Show("You are win :)");
+                MessageBox.Show("You won :)");
                 OnCloseFightWindow(null);
 
                 int storageCapacity = GetStorageCapacity();
@@ -902,7 +902,7 @@ namespace Space.ViewModel
         private bool CanRepairCommandExecute(object _)
         {
             bool result = true;
-            if (Player.Spaceship.HP < MaxPlayerHP)
+            if (Player.Spaceship.HP == MaxPlayerHP)
                 result = false;
             return result;
         }
