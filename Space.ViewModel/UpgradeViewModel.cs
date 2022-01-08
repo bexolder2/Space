@@ -759,13 +759,28 @@ namespace Space.ViewModel
 
         public void CancelLocate()
         {
-            if (buyBuffer.Count > 0 && lastEmptyBody != null)
+            if (buyBuffer.Count > 0)
             {
-                int index = PlayersShipModules.IndexOf(buyBuffer.Last());
-                PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(lastEmptyBody, Module.EmptyBody));
-                PlayersShipModules.Remove(buyBuffer.Last());
-                buyBuffer.Remove(buyBuffer.Last());
-                lastEmptyBody = null;
+                if (buyBuffer.Last().Value == Module.Body)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        PlayersShipModules.RemoveAt(PlayersShipModules.Count - 1);
+                    }
+                    buyBuffer.Remove(buyBuffer.Last());
+                    lastEmptyBody = null;
+                }
+                else
+                {
+                    if (lastEmptyBody != null)
+                    {
+                        int index = PlayersShipModules.IndexOf(buyBuffer.Last());
+                        PlayersShipModules.Insert(index, new KeyValuePair<IBindableModel, Module>(lastEmptyBody, Module.EmptyBody));
+                        PlayersShipModules.Remove(buyBuffer.Last());
+                        buyBuffer.Remove(buyBuffer.Last());
+                        lastEmptyBody = null;
+                    }
+                }
             }
         }
     }

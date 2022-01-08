@@ -18,9 +18,10 @@ namespace Space.View.Services
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToMarketWindow += NavigateToMarket;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToConvertWindow += NavigateToConvert;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.CloseFightWindow += OnCloseFightWindow;
+            (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.CloseUpgradeWindow += OnCloseUpgradeWindow;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.DisableMainWindow += OnDisableMainWindow;
             (Application.Current.Resources["Locator"] as ViewModelLocator).MainViewModel.NavigateToUpgradeWindow += NavigateToUpgrade;
-        } 
+        }
 
         public void ShowWindow(WindowType type)
         {
@@ -61,6 +62,9 @@ namespace Space.View.Services
                 case WindowType.MarketWindow:
                     break;
                 case WindowType.UpgradeWindow:
+                    Application.Current.Dispatcher.Invoke(() => {
+                        UpgradeWnd.Close();
+                    });
                     break;
                 case WindowType.ConvertWindow:
                     Application.Current.Dispatcher.Invoke(() => {
@@ -141,6 +145,16 @@ namespace Space.View.Services
         private void OnCloseConvertWindow(object sender, System.EventArgs e)
         {
             CloseConvertWnd();
+        }
+
+        private void OnCloseUpgradeWindow(object sender, System.EventArgs e)
+        {
+            CloseUpgradeWnd();
+        }
+
+        public void CloseUpgradeWnd()
+        {
+            CloseWindow(WindowType.UpgradeWindow);
         }
 
         public void CloseFightWnd()

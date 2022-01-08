@@ -40,6 +40,7 @@ namespace Space.ViewModel
         public event EventHandler<EventArgs> NavigateToConvertWindow;
         public event EventHandler<EventArgs> NavigateToUpgradeWindow;
         public event EventHandler<EventArgs> CloseFightWindow;
+        public event EventHandler<EventArgs> CloseUpgradeWindow;
         public event EventHandler<EventArgs> DisableMainWindow;   
 
         private ShipConfigurator configurator;
@@ -91,6 +92,7 @@ namespace Space.ViewModel
             BuyModel = new MarketModel();
             SellModel = new MarketModel();
             ConvertModel = new ConvertModel();
+            InfoCommand.Execute(null);
         }
 
         #region commands
@@ -261,9 +263,6 @@ namespace Space.ViewModel
             };
 
             Player.Resources.EnergyValueChanged += UpdateEnergyValue;
-            Player.Spaceship.ShipModules = Constants.BaseComplectation;
-            UpdateShipModules(Player.Spaceship.ShipModules);
-            CalculateShipParams(true);
 
             #region test data
             Player.Spaceship.ShipModules = new List<KeyValuePair<IBindableModel, Module>>();
@@ -361,6 +360,7 @@ namespace Space.ViewModel
             asteroid.Asteroid.Coordinates = asteroid.Coordinates; 
             asteroid.Name = asteroid.Asteroid.Name;
             Application.Current.Dispatcher.Invoke(() => {
+                Cells.RemoveAt((int)(asteroid.Coordinates.Y * numberRowsOrColumns + asteroid.Coordinates.X));
                 Cells.Insert((int)(asteroid.Coordinates.Y * numberRowsOrColumns + asteroid.Coordinates.X), asteroid);
             });
         }
@@ -529,25 +529,26 @@ namespace Space.ViewModel
         }
         private void OnCollectCommandExecuted(object parameter)
         {
+            bool isOreCollect = false;
             if (parameter.ToString() == "asteroid")
             {
                 int asteroidIndex = (int)(Player.Spaceship.CurrentCoordinates.Y * numberRowsOrColumns + Player.Spaceship.CurrentCoordinates.X);
                 if (Player.Resources.EnergyValue > 0)
                 {
-                    CollectOre(parameter.ToString(), asteroidIndex);
+                    isOreCollect = CollectOre(parameter.ToString(), asteroidIndex);
                 }
             }
             else
             {
                 if (Player.Resources.EnergyValue > 0)
                 {
-                    CollectOre(parameter.ToString());
+                    isOreCollect = CollectOre(parameter.ToString());
                 }
             }
             ShipPropertyCounter.CountAvailableDistance(ref player);
 
             bool isPiratesAttack = new PiratesProbabilityGenertor().Generate();
-            if (isPiratesAttack)
+            if (isPiratesAttack && isOreCollect)
             {
                 Pirate = null;
                 Pirate = configurator.CreatePirate();
@@ -556,31 +557,51 @@ namespace Space.ViewModel
             }
         }
 
-        private void CollectOre(string param, int index = 0)
+        private bool CollectOre(string param, int index = 0)
         {
+            bool result = true;
             int ValuePerIteration = GetNumberOfOrePerCollect();
             Player.Resources.EnergyValue -= 1;
             int oreAmount = ValuePerIteration;
+            int storageCapacity = GetStorageCapacity();
+
+            if (Player.Resources.OreValue + oreAmount > storageCapacity)
+            {
+                MessageBox.Show("Склад заполнен.");
+                oreAmount = 0;
+                result = false;
+            }
 
             if (param == "asteroid")
-            {
+            {    
                 int numberOfOre = Cells[index].Asteroid.NumberOfOre;
-                if (numberOfOre < ValuePerIteration)
-                {
-                    oreAmount = numberOfOre;
-                }
-                Cells[index].Asteroid.NumberOfOre -= oreAmount;
 
-                if (Cells[index].Asteroid.NumberOfOre == 0)
+                if (Player.Resources.OreValue + numberOfOre > storageCapacity)
                 {
-                    Cells[index].CellType = CellType.Player;
-                    Cells[index].Asteroid = null;
-                    var tmp = Cells[index];
-                    Cells.RemoveAt(index);
-                    Cells.Insert(index, tmp);
+                    MessageBox.Show("Склад заполнен.");
+                    oreAmount = 0;
+                    result = false;
                 }
+                else
+                {
+                    if (numberOfOre < ValuePerIteration)
+                    {
+                        oreAmount = numberOfOre;
+                    }
+                    Cells[index].Asteroid.NumberOfOre -= oreAmount;
+
+                    if (Cells[index].Asteroid.NumberOfOre == 0)
+                    {
+                        Cells[index].CellType = CellType.Player;
+                        Cells[index].Asteroid = null;
+                        var tmp = Cells[index];
+                        Cells.RemoveAt(index);
+                        Cells.Insert(index, tmp);
+                    }
+                }               
             }
             Player.Resources.OreValue += oreAmount;
+            return result;
         }
 
         private int GetNumberOfOrePerCollect()
@@ -942,7 +963,8 @@ namespace Space.ViewModel
 
         private void OnInfoCommandExecuted(object _)
         {
-            MessageBox.Show("Чтобы перемещать корабль нужно нажать правой кнопкой по кораблю, " +
+            MessageBox.Show("Зайдите в Upgrade чтоб получить корабль. " +
+                            "Чтобы перемещать корабль нужно нажать правой кнопкой по кораблю, " +
                             "выбрать Move и потом двойным кликом на место назначания. " +
                             "Для сбора ресурсов нажать правой кнопкой на корабль и выбрать Collect.\n\n" +
                             "В окне с улучшениями можно двигать модули по тому же принципу что и корабль. " +
